@@ -12,6 +12,8 @@ A static, dependency-free editorial portfolio for a penetration tester and rever
 - `/resume.html` — print-ready CV (PDF in `assets/Okasha-Mehmood-CV.pdf`)
 - `/admin/` — local authoring console (not linked publicly, `noindex`)
 
+The header also includes an optional **Aa** larger-text reading mode, stored in the visitor's browser.
+
 ---
 
 ## Preview locally

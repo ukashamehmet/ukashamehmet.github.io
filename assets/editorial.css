@@ -2740,7 +2740,8 @@ body.page-home .hero-visual {
   .hero-note,
   .filter-bar,
   .projects-cta,
-  .article-aside {
+  .article-aside,
+  .type-toggle {
     display: none !important;
   }
 
@@ -2759,5 +2760,401 @@ body.page-home .hero-visual {
     display: block !important;
     background: #fff !important;
     color: #111 !important;
+  }
+}
+
+/* ==========================================================================
+   Readability pass
+   The editorial layout stays sparse, but body copy is sized for reading.
+   ========================================================================== */
+
+body {
+  font-size: 16px;
+}
+
+.hero-lede {
+  font-size: 16px;
+}
+
+.section-lead {
+  font-size: 15px;
+}
+
+.site-nav a {
+  font-size: 10px;
+}
+
+.eyebrow {
+  font-size: 10px;
+}
+
+.hero-meta {
+  font-size: 9px;
+}
+
+.work-index {
+  font-size: 9px;
+}
+
+.work-card p {
+  font-size: 14px;
+}
+
+.work-card-meta {
+  font-size: 9.5px;
+}
+
+.tag {
+  padding: 4px 7px;
+  font-size: 8.5px;
+}
+
+.stat p,
+.sector-label,
+.sector-list li {
+  font-size: 9px;
+}
+
+.approach-step p {
+  font-size: 14px;
+}
+
+.artifact strong {
+  font-size: 11px;
+}
+
+.artifact span {
+  font-size: 8px;
+}
+
+.cap-card p {
+  font-size: 14px;
+}
+
+.cap-list li {
+  font-size: 8.5px;
+}
+
+.toolbelt-label,
+.toolbelt-list li {
+  font-size: 9px;
+}
+
+.ledger thead th {
+  font-size: 8.5px;
+}
+
+.ledger tbody th {
+  font-size: 22px;
+}
+
+.ledger tbody td {
+  font-size: 12.5px;
+}
+
+.ledger-outcome {
+  font-size: 8.5px;
+}
+
+.about-intro p {
+  font-size: 14px;
+}
+
+.about-body > p {
+  font-size: 15px;
+}
+
+.principle span {
+  font-size: 10px;
+}
+
+.timeline-date {
+  font-size: 8.5px;
+}
+
+.timeline-item p {
+  font-size: 11.5px;
+}
+
+.credential strong {
+  font-size: 10.5px;
+}
+
+.credential span {
+  font-size: 9.5px;
+}
+
+.post-card-top,
+.post-card-foot {
+  font-size: 8.5px;
+}
+
+.post-card p {
+  font-size: 13.5px;
+}
+
+.contact-copy p {
+  font-size: 15px;
+}
+
+.contact-row strong {
+  font-size: 12px;
+}
+
+.contact-row small {
+  font-size: 8.5px;
+}
+
+.contact-card-foot {
+  font-size: 10px;
+}
+
+.footer-brand p {
+  font-size: 10.5px;
+}
+
+.footer-nav a {
+  font-size: 9px;
+}
+
+.footer-bottom {
+  font-size: 8px;
+}
+
+/* Projects */
+.breadcrumb {
+  font-size: 9.5px;
+}
+
+.page-hero-lead {
+  font-size: 15px;
+}
+
+.confidentiality-bar p {
+  font-size: 12px;
+}
+
+.filter-btn {
+  font-size: 10px;
+}
+
+.filter-count {
+  font-size: 9px;
+}
+
+.case-heading .chip {
+  font-size: 9px;
+}
+
+.case-summary > div > p {
+  font-size: 13px;
+}
+
+.case-summary-meta .tag {
+  font-size: 8.5px;
+}
+
+.case-meta-grid dt {
+  font-size: 8.5px;
+}
+
+.case-meta-grid dd {
+  font-size: 11.5px;
+}
+
+.case-section h3 {
+  font-size: 9px;
+}
+
+.case-section p {
+  font-size: 14px;
+}
+
+.case-steps li {
+  font-size: 13.5px;
+}
+
+.case-code {
+  font-size: 11.5px;
+}
+
+.case-callout p {
+  font-size: 12.5px;
+}
+
+.outcome span {
+  font-size: 8.5px;
+}
+
+.case-footer .tag {
+  font-size: 8.5px;
+}
+
+.archive-table th {
+  font-size: 8.5px;
+}
+
+.archive-table td {
+  font-size: 12.5px;
+}
+
+.archive-table td:first-child {
+  font-size: 10.5px;
+}
+
+.archive-table td:last-child {
+  font-size: 9.5px;
+}
+
+.projects-cta p {
+  font-size: 13px;
+}
+
+/* Writing */
+.article-aside .mono,
+.article-aside dt {
+  font-size: 8px;
+}
+
+.article-aside dd {
+  font-size: 10.5px;
+}
+
+.article-header .article-dek {
+  font-size: 16px;
+}
+
+.article-byline {
+  font-size: 9px;
+}
+
+.prose {
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.article-callout p {
+  font-size: 13px;
+}
+
+.article-end p {
+  font-size: 13.5px;
+}
+
+/* Optional larger reading mode */
+.type-toggle {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 34px;
+  height: 34px;
+  margin-left: 6px;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text);
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: -0.04em;
+  transition:
+    background 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.type-toggle:hover,
+.type-toggle[aria-pressed="true"] {
+  border-color: #11110f;
+  background: #11110f;
+  color: #f3f1eb;
+}
+
+html.large-text body {
+  font-size: 17px;
+}
+
+html.large-text .hero-lede {
+  font-size: 17px;
+}
+
+html.large-text .section-lead {
+  font-size: 16px;
+}
+
+html.large-text .work-card p,
+html.large-text .approach-step p,
+html.large-text .cap-card p,
+html.large-text .about-intro p {
+  font-size: 15.5px;
+}
+
+html.large-text .case-summary > div > p {
+  font-size: 14.5px;
+}
+
+html.large-text .case-section p,
+html.large-text .case-steps li {
+  font-size: 15px;
+}
+
+html.large-text .archive-table td {
+  font-size: 14px;
+}
+
+html.large-text .prose {
+  font-size: 17px;
+}
+
+html.large-text .contact-copy p,
+html.large-text .about-body > p {
+  font-size: 16.5px;
+}
+
+html.large-text .contact-row strong {
+  font-size: 13px;
+}
+
+@media (min-width: 901px) {
+  .site-nav {
+    margin-left: auto;
+  }
+}
+
+@media (max-width: 900px) {
+  .type-toggle {
+    margin-left: auto;
+  }
+
+  html.large-text .hero-lede {
+    font-size: 15px;
+  }
+
+  html.large-text .case-section p,
+  html.large-text .case-steps li {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-lede {
+    font-size: 14px;
+  }
+
+  .section-lead {
+    font-size: 14px;
+  }
+
+  .case-summary > div > p {
+    font-size: 12.5px;
+  }
+
+  .case-section p,
+  .case-steps li {
+    font-size: 13.5px;
+  }
+
+  .archive-table td {
+    font-size: 12px;
   }
 }

@@ -128,6 +128,45 @@
     el.textContent = String(new Date().getFullYear());
   });
 
+  /* ---------- Optional larger-text reading mode ---------- */
+  function applyTextSize(large, button) {
+    document.documentElement.classList.toggle("large-text", large);
+    if (button) {
+      button.setAttribute("aria-pressed", String(large));
+      button.setAttribute("aria-label", large ? "Use standard text size" : "Use larger text");
+      button.setAttribute("title", large ? "Standard text" : "Larger text");
+    }
+  }
+
+  if (!document.body.classList.contains("admin-body")) {
+    const headerInner = $(".header-inner");
+    if (headerInner) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "type-toggle";
+      button.innerHTML = '<span aria-hidden="true">Aa</span>';
+      const savedLarge = (() => {
+        try {
+          return localStorage.getItem("om-large-text") === "1";
+        } catch (error) {
+          return false;
+        }
+      })();
+      applyTextSize(savedLarge, button);
+      button.addEventListener("click", () => {
+        const large = !document.documentElement.classList.contains("large-text");
+        applyTextSize(large, button);
+        try {
+          localStorage.setItem("om-large-text", large ? "1" : "0");
+        } catch (error) {
+          /* Reading mode still works for this page view. */
+        }
+      });
+      const menu = headerInner.querySelector(".menu-toggle");
+      headerInner.insertBefore(button, menu || null);
+    }
+  }
+
   /* ---------- Reveal on scroll ---------- */
   const revealItems = $$("[data-reveal]");
   if (revealItems.length) {
