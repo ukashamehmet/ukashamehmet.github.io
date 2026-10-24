@@ -3,9 +3,5 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /resume.html
-Disallow: /docs/
-Disallow: /site/
-Disallow: /website/
-Disallow: /.private-archive/
 
-# No sitemap directive until the production domain is configured.
+Sitemap: https://ukashamehmet.github.io/sitemap.xml

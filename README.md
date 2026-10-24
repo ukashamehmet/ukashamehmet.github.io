@@ -2,6 +2,8 @@
 
 A static, dependency-free portfolio for a penetration tester and reverse engineer. Built for GitHub Pages, with a sanitized case-study collection, long-form field notes, a downloadable CV, and a local-only content studio.
 
+**Live site:** https://ukashamehmet.github.io/
+
 **Live sections**
 
 - `/` — positioning, selected work, approach, capabilities, experience, writing, contact
@@ -78,6 +80,7 @@ All internal links are relative, so they work in both layouts. `.nojekyll` is in
 ├── admin/
 │   └── index.html
 ├── robots.txt
+├── sitemap.xml
 ├── .nojekyll
 ├── .gitignore
 └── README.md
@@ -126,13 +129,9 @@ The current PDF is a one-page A4 CV.
 
 ### Social preview and metadata
 
-`assets/og-card.png` is a 1200×630 social preview. Replace it with your own image if you change the hero. After you know your production URL, make `og:image` absolute in all page heads for the most reliable previews:
+`assets/og-card.png` is a 1200×630 social preview. Replace it with your own image if you change the hero. Canonical URLs, `og:url`, `og:image`, and `twitter:image` are now set to `https://ukashamehmet.github.io/`, and `sitemap.xml` lists the public pages.
 
-```html
-<meta property="og:image" content="https://your-domain.example/assets/og-card.png">
-```
-
-Also add a canonical URL and, optionally, a `sitemap.xml` once the domain is fixed.
+If you move to a custom domain, update these absolute URLs in every page head, update `sitemap.xml` and `robots.txt`, and replace the `og:image` path.
 
 ### Admin / content studio
 
