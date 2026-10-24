@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Content Studio — Okasha Mehmood</title>
+  <meta name="description" content="Local-only portfolio authoring console.">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#07110d">
+
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="admin-body">
+  <a class="skip-link" href="#admin-main">Skip to studio</a>
+
+  <div class="admin-shell">
+    <aside class="admin-sidebar" aria-label="Studio navigation">
+      <a class="brand" href="../index.html" aria-label="Okasha Mehmood — portfolio home">
+        <span class="brand-mark" aria-hidden="true">OM</span>
+        <span class="brand-text"><strong>Okasha Mehmood</strong><small>Content studio</small></span>
+      </a>
+
+      <nav class="admin-nav" aria-label="Studio sections">
+        <button type="button" data-admin-view="overview" class="is-active">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          Overview
+        </button>
+        <button type="button" data-admin-view="projects">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 3h10v18H7z"/><path d="M10 8h4M10 12h4M10 16h3"/></svg>
+          Case studies
+        </button>
+        <button type="button" data-admin-view="writing">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 5h16v14H4z"/><path d="M8 9h8M8 13h5M8 17h7"/></svg>
+          Writing
+        </button>
+        <button type="button" data-admin-view="publish">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+          Publish
+        </button>
+        <a href="../index.html" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+          View live site
+        </a>
+      </nav>
+
+      <div class="admin-sidebar-foot">
+        <p><strong>Local-only tool</strong>Nothing here is sent to a server. Do not enter client data, credentials, or secrets. This page is excluded from search indexing but is not an authentication boundary.</p>
+      </div>
+    </aside>
+
+    <div class="admin-main" id="admin-main">
+      <div class="admin-topbar">
+        <div style="display:flex; align-items:center; gap:10px;">
+          <button class="icon-btn admin-hamburger" type="button" data-admin-menu aria-label="Open studio menu">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+          </button>
+          <div>
+            <h1 data-view-title>Overview</h1>
+            <p data-view-sub>A local read-out of the portfolio's content and launch checklist.</p>
+          </div>
+        </div>
+        <div class="admin-topbar-actions">
+          <button class="btn btn--ghost btn--sm" type="button" data-export>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5"/><path d="M5 21h14"/></svg>
+            <span>Export</span>
+          </button>
+          <a class="btn btn--primary btn--sm" href="../index.html" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+            <span>View site</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="admin-content">
+        <!-- Overview -->
+        <section class="admin-view" id="view-overview">
+          <div class="admin-note">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="M12 8v5M12 16h.01"/></svg>
+            <p><strong>Authoring companion, not a CMS.</strong> The public site is static HTML for GitHub Pages. This studio stores draft metadata in your browser and exports JSON for review. Changes here do not update the live site automatically. Always remove client identifiers before publishing.</p>
+          </div>
+
+          <div class="admin-metrics">
+            <div class="admin-metric"><span>Case studies</span><strong data-metric="projects">8</strong><small>in the collection</small></div>
+            <div class="admin-metric"><span>Published</span><strong data-metric="published">8</strong><small>public entries</small></div>
+            <div class="admin-metric"><span>Field notes</span><strong data-metric="posts">4</strong><small>article entries</small></div>
+            <div class="admin-metric"><span>Checks passed</span><strong data-metric="checks">0/5</strong><small>confidentiality</small></div>
+          </div>
+
+          <div class="admin-grid-2">
+            <div>
+              <div class="admin-panel">
+                <div class="admin-panel-head">
+                  <h3>Portfolio at a glance</h3>
+                  <span class="status-pill published">Local draft</span>
+                </div>
+                <div style="padding:16px;">
+                  <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                    <div style="padding:12px; border:1px solid var(--line); border-radius:8px;">
+                      <span class="mono" style="font-size:7px; color:var(--muted-2); letter-spacing:.08em; text-transform:uppercase;">Positioning</span>
+                      <p style="margin-top:6px; font-family:var(--serif); font-size:1.45rem; line-height:1.1; letter-spacing:-.02em;">Offensive security, written for the people who fix it.</p>
+                    </div>
+                    <div style="padding:12px; border:1px solid var(--line); border-radius:8px;">
+                      <span class="mono" style="font-size:7px; color:var(--muted-2); letter-spacing:.08em; text-transform:uppercase;">Primary proof</span>
+                      <p style="margin-top:6px; font-family:var(--serif); font-size:1.45rem; line-height:1.1; letter-spacing:-.02em;">50+ confidential engagements across 7 sectors.</p>
+                    </div>
+                  </div>
+                  <div style="display:flex; flex-wrap:wrap; gap:6px; margin-top:12px;">
+                    <span class="chip chip--accent">Sanitized case studies</span>
+                    <span class="chip">NDA-safe</span>
+                    <span class="chip">Static / GitHub Pages</span>
+                    <span class="chip">No trackers</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-panel" style="margin-top:12px;">
+                <div class="admin-panel-head"><h3>Recent activity</h3><span class="mono" style="font-size:7px; color:var(--muted-2);">Local</span></div>
+                <div class="activity-list" data-activity-list></div>
+              </div>
+            </div>
+
+            <div>
+              <div class="admin-panel">
+                <div class="admin-panel-head"><h3>Publish readiness</h3><span class="chip chip--high">Before export</span></div>
+                <div class="publish-list" data-publish-list></div>
+              </div>
+
+              <div class="admin-panel" style="margin-top:12px;">
+                <div class="admin-panel-head"><h3>Studio notes</h3></div>
+                <div style="padding:14px 15px; display:grid; gap:10px;">
+                  <p style="color:var(--muted); font-size:8.5px; line-height:1.6;"><strong style="color:var(--text);">Not a login.</strong> This page has no authentication. It is intentionally excluded from navigation and marked <code style="font-family:var(--mono); font-size:8px;">noindex</code>. Do not put sensitive material here.</p>
+                  <p style="color:var(--muted); font-size:8.5px; line-height:1.6;"><strong style="color:var(--text);">No client data.</strong> Use placeholders for names, domains, IPs, tokens, and records. The public case studies are deliberately generalized.</p>
+                  <p style="color:var(--muted); font-size:8.5px; line-height:1.6;"><strong style="color:var(--text);">How publishing works.</strong> Edit metadata, export JSON, review it, then update the static pages and commit. GitHub Pages serves the committed files.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Projects -->
+        <section class="admin-view" id="view-projects" hidden>
+          <div class="admin-heading">
+            <div>
+              <h2>Collection</h2>
+              <p>Edit the public project index, status, and disclosure flags. Local changes only.</p>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn--ghost btn--sm" type="button" data-export>Export JSON</button>
+              <button class="btn btn--primary btn--sm" type="button" data-new-project>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                New case study
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-panel">
+            <div class="admin-panel-head">
+              <h3>Collection</h3>
+              <label class="admin-search">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m16 16 4 4"/></svg>
+                <input type="search" placeholder="Search case studies" aria-label="Search case studies" data-project-search>
+              </label>
+            </div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Category</th>
+                    <th scope="col">Severity</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">NDA</th>
+                    <th scope="col" style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody data-project-rows></tbody>
+              </table>
+            </div>
+          </div>
+          <p style="margin-top:10px; color:var(--muted-2); font-size:8px; line-height:1.6;">Deleting here only removes the local draft entry. It does not change the static site or any published file.</p>
+        </section>
+
+        <!-- Writing -->
+        <section class="admin-view" id="view-writing" hidden>
+          <div class="admin-heading">
+            <div>
+              <h2>Writing</h2>
+              <p>Manage article metadata and publication state.</p>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn--primary btn--sm" type="button" data-new-post>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+                New article
+              </button>
+            </div>
+          </div>
+
+          <div class="admin-panel">
+            <div class="admin-panel-head"><h3>Field notes</h3><span class="chip">Static markdown-style HTML</span></div>
+            <div class="admin-table-wrap">
+              <table class="admin-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Topic</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Summary</th>
+                    <th scope="col" style="text-align:right;">Actions</th>
+                  </tr>
+                </thead>
+                <tbody data-post-rows></tbody>
+              </table>
+            </div>
+          </div>
+          <p style="margin-top:10px; color:var(--muted-2); font-size:8px; line-height:1.6;">Article pages live in <code style="font-family:var(--mono);">blog/posts/</code>. Editing metadata here does not generate a page; update the HTML file and this index together.</p>
+        </section>
+
+        <!-- Publish -->
+        <section class="admin-view" id="view-publish" hidden>
+          <div class="admin-heading">
+            <div>
+              <h2>Pre-flight checks</h2>
+              <p>Run the confidentiality and quality checks before exporting.</p>
+            </div>
+            <div class="admin-actions">
+              <button class="btn btn--ghost btn--sm" type="button" data-copy-json>Copy JSON</button>
+              <button class="btn btn--primary btn--sm" type="button" data-export>Export JSON</button>
+            </div>
+          </div>
+
+          <div class="admin-grid-2">
+            <div class="admin-panel">
+              <div class="admin-panel-head"><h3>Confidentiality checklist</h3><span class="chip chip--high">Required</span></div>
+              <div class="publish-list" data-publish-list></div>
+              <div style="padding:14px 15px; border-top:1px solid var(--line);">
+                <p style="color:var(--muted-2); font-size:8px; line-height:1.6;">The checklist is a prompt, not proof. Review the actual content line by line. If a claim cannot be supported by an engagement record, remove it.</p>
+              </div>
+            </div>
+
+            <div>
+              <div class="admin-panel">
+                <div class="admin-panel-head"><h3>Content handoff</h3></div>
+                <div style="padding:15px; display:grid; gap:10px;">
+                  <p style="color:var(--muted); font-size:9px; line-height:1.6;">Export a dated JSON snapshot of the local authoring state. Use it to review changes, share metadata, or rebuild the static pages.</p>
+                  <div class="admin-actions">
+                    <button class="btn btn--primary btn--sm" type="button" data-export>Download JSON</button>
+                    <button class="btn btn--ghost btn--sm" type="button" data-import>Import JSON</button>
+                    <button class="btn btn--ghost btn--sm" type="button" data-copy-json>Copy</button>
+                    <input type="file" accept="application/json" data-import-input hidden>
+                  </div>
+                  <div style="border-top:1px solid var(--line); padding-top:10px;">
+                    <p style="color:var(--muted-2); font-size:8px; line-height:1.6;"><strong style="color:var(--text);">Static publish flow:</strong> export &rarr; review identifiers &rarr; update HTML &rarr; commit &rarr; let GitHub Pages rebuild. There is no server-side publish button, by design.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="admin-panel" style="margin-top:12px;">
+                <div class="admin-panel-head"><h3>Danger zone</h3><span class="chip" style="color:var(--critical); border-color:rgba(255,134,118,.25);">Local only</span></div>
+                <div style="padding:15px;">
+                  <p style="color:var(--muted-2); font-size:8.5px; line-height:1.6;">Reset the browser-stored studio state to the shipped defaults. This does not touch the public site.</p>
+                  <button class="btn btn--ghost btn--sm" type="button" data-reset style="margin-top:10px; color:var(--critical); border-color:rgba(255,134,118,.25);">Reset local studio</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- Project dialog -->
+  <dialog class="admin-modal" id="project-dialog" aria-labelledby="project-dialog-title">
+    <div class="admin-modal-head">
+      <h2 id="project-dialog-title" data-project-dialog-title>New case study</h2>
+      <button class="icon-btn" type="button" data-close-dialog aria-label="Close dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <form class="admin-form" id="project-form">
+      <input type="hidden" id="project-id">
+      <div class="form-grid">
+        <div class="field field--full">
+          <label for="project-title">Title</label>
+          <input id="project-title" name="title" type="text" required maxlength="120" placeholder="One query, every tenant">
+        </div>
+        <div class="field">
+          <label for="project-slug">Link / anchor</label>
+          <input id="project-slug" name="slug" type="text" placeholder="projects/#new-case">
+        </div>
+        <div class="field">
+          <label for="project-category">Category</label>
+          <select id="project-category" name="category">
+            <option>Web &amp; API</option>
+            <option>Web</option>
+            <option>API</option>
+            <option>Network</option>
+            <option>Mobile &amp; API</option>
+            <option>Mobile / RE</option>
+            <option>Research</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="project-severity">Severity</label>
+          <select id="project-severity" name="severity">
+            <option>Critical</option>
+            <option>High</option>
+            <option>Medium</option>
+            <option>Low</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="project-status">Status</label>
+          <select id="project-status" name="status">
+            <option>Draft</option>
+            <option>Review</option>
+            <option>Published</option>
+          </select>
+        </div>
+        <div class="field field--full">
+          <label for="project-summary">Summary</label>
+          <textarea id="project-summary" name="summary" maxlength="280" placeholder="One or two sentences. What failed, and what changed?"></textarea>
+        </div>
+        <div class="field field--full">
+          <label for="project-tags">Tags</label>
+          <input id="project-tags" name="tags" type="text" placeholder="BOLA, Django REST, authorization">
+        </div>
+        <div class="field field--full">
+          <label style="display:flex; align-items:center; gap:8px; text-transform:none; letter-spacing:0; font-family:var(--sans); font-size:10px; color:var(--muted);">
+            <input id="project-confidential" name="confidential" type="checkbox" checked style="width:13px; height:13px; accent-color:var(--accent);">
+            Confidential engagement — public write-up must remain sanitized
+          </label>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn--ghost btn--sm" type="button" data-close-dialog>Cancel</button>
+        <button class="btn btn--primary btn--sm" type="submit">Save draft</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Post dialog -->
+  <dialog class="admin-modal" id="post-dialog" aria-labelledby="post-dialog-title">
+    <div class="admin-modal-head">
+      <h2 id="post-dialog-title" data-post-dialog-title>New article</h2>
+      <button class="icon-btn" type="button" data-close-dialog aria-label="Close dialog">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+    <form class="admin-form" id="post-form">
+      <input type="hidden" id="post-id">
+      <div class="form-grid">
+        <div class="field field--full">
+          <label for="post-title">Title</label>
+          <input id="post-title" name="title" type="text" required maxlength="140" placeholder="The tenant boundary is a query, not a checkbox">
+        </div>
+        <div class="field">
+          <label for="post-slug">File path</label>
+          <input id="post-slug" name="slug" type="text" placeholder="blog/posts/new-note.html">
+        </div>
+        <div class="field">
+          <label for="post-category">Topic</label>
+          <select id="post-category" name="category">
+            <option>Application security</option>
+            <option>Network &amp; cloud</option>
+            <option>Mobile reversing</option>
+            <option>Security craft</option>
+            <option>Vulnerability research</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="post-status">Status</label>
+          <select id="post-status" name="status">
+            <option>Draft</option>
+            <option>Review</option>
+            <option>Published</option>
+          </select>
+        </div>
+        <div class="field field--full">
+          <label for="post-summary">Summary</label>
+          <textarea id="post-summary" name="summary" maxlength="280" placeholder="One or two sentences. What will the reader learn?"></textarea>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button class="btn btn--ghost btn--sm" type="button" data-close-dialog>Cancel</button>
+        <button class="btn btn--primary btn--sm" type="submit">Save draft</button>
+      </div>
+    </form>
+  </dialog>
+
+  <noscript>
+    <div style="position:fixed; bottom:0; left:0; right:0; padding:14px; background:#0d2118; color:#fff; font-family:sans-serif; font-size:13px; text-align:center; z-index:999;">
+      This local studio needs JavaScript. The public portfolio works without it.
+    </div>
+  </noscript>
+
+  <script src="../assets/script.js" defer></script>
+</body>
+</html>

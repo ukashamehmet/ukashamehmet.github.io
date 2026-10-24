@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Okasha Mehmood monogram">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#102a20"/>
+      <stop offset="1" stop-color="#06100c"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="64" y2="0" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7de8ae"/>
+      <stop offset="1" stop-color="#baf8d2"/>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="15" fill="url(#bg)"/>
+  <rect x="1" y="1" width="62" height="62" rx="14" fill="none" stroke="#7de8ae" stroke-opacity=".28"/>
+  <text x="32" y="43" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="27" letter-spacing="-2" fill="#edf5ef">OM</text>
+  <circle cx="51.5" cy="12.5" r="3.5" fill="url(#accent)"/>
+  <path d="M15 53h34" stroke="#7de8ae" stroke-opacity=".45" stroke-width="1.5" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What a rogue VPN service looks like from the inside — Okasha Mehmood</title>
+  <meta name="description" content="Static and dynamic signals from an Android dropper that turns the device into the network — and the limits of what it can actually see.">
+  <meta name="author" content="Okasha Mehmood">
+  <meta name="theme-color" content="#f1eee4">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="What a rogue VPN service looks like from the inside">
+  <meta property="og:description" content="The permission model, the TUN route, the second-stage loader, and what a local VPN can actually observe.">
+  <meta property="og:image" content="../../assets/og-card.png">
+  <meta property="article:author" content="Okasha Mehmood">
+  <meta property="article:published_time" content="2026-04-12">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="What a rogue VPN service looks like from the inside">
+  <meta name="twitter:description" content="Signals from an Android dropper abusing VpnService.">
+  <meta name="twitter:image" content="../../assets/og-card.png">
+
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../assets/favicon.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../assets/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="page-article">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Okasha Mehmood — home">
+        <span class="brand-mark" aria-hidden="true">OM</span>
+        <span class="brand-text"><strong>Okasha Mehmood</strong><small>Security engineering</small></span>
+      </a>
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <a href="../../projects/">Work</a>
+        <a href="../../index.html#approach">Approach</a>
+        <a href="../../index.html#about">About</a>
+        <a href="../" aria-current="page">Writing</a>
+        <a class="nav-cta" href="../../index.html#contact">
+          Let&rsquo;s talk
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+        </a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="article-main">
+    <div class="container container--wide">
+      <div class="article-shell">
+        <aside class="article-aside" aria-label="Article details">
+          <a class="text-link" href="../">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+            All field notes
+          </a>
+          <dl>
+            <div><dt>Published</dt><dd>12 Apr 2026</dd></div>
+            <div><dt>Reading time</dt><dd>8 minutes</dd></div>
+            <div><dt>Topic</dt><dd>Mobile reversing</dd></div>
+            <div><dt>Level</dt><dd>Practitioner</dd></div>
+          </dl>
+          <button class="text-link" type="button" data-copy-article>
+            Copy link
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+          </button>
+        </aside>
+
+        <article>
+          <header class="article-header">
+            <p class="eyebrow">Mobile reversing / Android</p>
+            <h1>What a rogue VPN service looks like from the inside</h1>
+            <p class="article-dek">
+              A malicious app does not need root to become the device&rsquo;s network path. It only
+              needs the user to tap &ldquo;allow&rdquo; on a VPN consent prompt. Here is what happens
+              next — and what the app can, and cannot, see.
+            </p>
+            <div class="article-byline">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>
+                Okasha Mehmood
+              </span>
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                8 min read
+              </span>
+              <span>Sanitized · no live indicators</span>
+            </div>
+          </header>
+
+          <div class="prose">
+            <p>
+              Android&rsquo;s <code>VpnService</code> is a legitimate API. It lets a user choose an
+              application to route device traffic through a virtual network interface — the basis of
+              corporate VPNs, privacy tools, and traffic analyzers. The permission prompt is the
+              security boundary: the user is handing an app a position of significant control.
+            </p>
+            <p>
+              In the sample I analysed, the app presented itself as a municipal traffic-notice utility.
+              It did not ask for root. It did not need an exploit. It asked for VPN access, and that
+              was enough to become the device&rsquo;s egress point.
+            </p>
+
+            <h2>The manifest is the first signal</h2>
+            <p>
+              Static review starts with capabilities. The interesting permissions were not unusual on
+              their own; the combination was.
+            </p>
+            <ul>
+              <li><code>BIND_VPN_SERVICE</code> — the app can implement a VPN service and receive the user&rsquo;s consent.</li>
+              <li><code>RECEIVE_BOOT_COMPLETED</code> — the service can be restarted after a reboot.</li>
+              <li><code>REQUEST_INSTALL_PACKAGES</code> — the app can prompt the user to install another APK.</li>
+            </ul>
+            <p>
+              A single one of these may be legitimate. Together, they describe an app that can persist,
+              control the network path, and bring in a second stage. That is a dropper pattern, not a
+              traffic-notice app.
+            </p>
+
+            <h2>The route is the capability</h2>
+            <p>
+              The service built a TUN interface with a private address and a default route. In
+              simplified form, the behavior looks like this:
+            </p>
+            <pre><code>VpnService.Builder()
+    .addAddress("&lt;tun-address&gt;", 32)
+    .addRoute("0.0.0.0", 0)        // default route: all IPv4 egress
+    .addDnsServer("&lt;dns-resolver&gt;")
+    .establish()</code></pre>
+            <p>
+              On a real device, the addresses are assigned by the VPN implementation. The important
+              detail is the default route: it pulls traffic from other apps into the VPN process. The
+              app can then forward, inspect, modify, or drop that traffic. That is the same mechanism a
+              legitimate security tool uses — and the same mechanism an attacker can abuse.
+            </p>
+            <p>
+              The VPN is not a remote server by default. It is a local interface. The malicious app can
+              run a local proxy, forward traffic to its own infrastructure, or simply observe what
+              passes through. The user sees a VPN key in the status bar and may assume they are
+              protected.
+            </p>
+
+            <h2>The second stage</h2>
+            <p>
+              The initial APK did not contain the full payload. A receiver contacted rotating
+              infrastructure, downloaded an encrypted blob, wrote it to the app&rsquo;s private cache,
+              decrypted it with a bundled key, and loaded it with <code>DexClassLoader</code>. This
+              keeps the installed package smaller, makes store review harder, and lets the operator
+              change behavior after installation.
+            </p>
+            <pre><code>// Behavioral sketch — values and class names removed
+download(&lt;encrypted-module&gt;)
+  → write(cacheDir/&lt;random&gt;)
+  → decrypt(&lt;bundled-key&gt;)
+  → DexClassLoader.loadClass(&lt;entry-point&gt;)</code></pre>
+            <p>
+              Dynamic loading is not inherently malicious — many apps use it for feature modules. In
+              this context, it explained why the visible APK looked incomplete. The real capability
+              arrived after installation.
+            </p>
+
+            <h2>What it can see — and what it cannot</h2>
+            <p>
+              It is tempting to describe a rogue VPN as &ldquo;reading every message.&rdquo; That is
+              usually inaccurate. A local VPN sees the traffic that passes through it, but modern apps
+              use TLS. Without a trusted interception certificate, the VPN sees connection metadata:
+              destinations, DNS queries, SNI in some cases, timing, and volume. Cleartext HTTP is fully
+              visible. TLS content is not.
+            </p>
+            <p>
+              This does not make the capability harmless. The app can redirect traffic, block updates,
+              inject content into cleartext sessions, profile behavior, and combine the network position
+              with other permissions. It can also prompt the user to install a second payload. The
+              accurate risk is <em>control and follow-on access</em>, not magical decryption.
+            </p>
+
+            <div class="article-callout">
+              <strong>Precision matters</strong>
+              <p>Overstating what malware can do makes the report easier to dismiss. State the observed capability, the conditions required for more, and the impact that follows. That is more useful to a defender than a dramatic claim.</p>
+            </div>
+
+            <h2>Detection signals that generalize</h2>
+            <p>
+              Indicators change; behavior is more stable. The following signals are useful across
+              families:
+            </p>
+            <ul>
+              <li>An application requesting <code>BIND_VPN_SERVICE</code> that is not an approved VPN or security tool.</li>
+              <li>A VPN route covering all addresses, especially when the app is not a known enterprise VPN.</li>
+              <li>Dynamic DEX loading shortly after installation, particularly from a cache directory.</li>
+              <li><code>REQUEST_INSTALL_PACKAGES</code> combined with a sideloaded distribution path.</li>
+              <li>DNS queries to unexpected external resolvers, or a sudden change in resolver behavior.</li>
+              <li>Repeated connections to newly registered or rotating domains from a non-browser app.</li>
+              <li>Accessibility or overlay permissions requested alongside network capabilities.</li>
+            </ul>
+            <p>
+              None of these is conclusive alone. Correlate them with installation source, user reports,
+              and network behavior.
+            </p>
+
+            <h2>Defense: remove the position, not just the sample</h2>
+            <p>
+              Blocking one package is temporary. The durable controls are about who can obtain this
+              position in the first place:
+            </p>
+            <ul>
+              <li>Disallow sideloading on managed devices and alert on unknown-source installs.</li>
+              <li>Treat VPN permission as a privileged capability; require approval and log its use.</li>
+              <li>Restrict <code>REQUEST_INSTALL_PACKAGES</code> through MDM policy where possible.</li>
+              <li>Monitor egress for external DNS resolvers, unusual VPN interfaces, and known-bad infrastructure.</li>
+              <li>Pair endpoint detections with a response playbook: remove the app, revoke sessions, rotate credentials, review second-stage activity.</li>
+            </ul>
+            <p>
+              The most important lesson is not about a specific malware family. It is that Android&rsquo;s
+              permission model gives users the ability to grant away a network position that most people
+              do not understand. Security teams should treat that grant as a control point — and
+              attackers already do.
+            </p>
+          </div>
+
+          <footer class="article-end">
+            <p>
+              <strong>Related case study:</strong> <a href="../../projects/#android-rat">The app that became the network</a> —
+              a sanitized Android malware analysis covering the dropper, the VPN route, and the detection
+              content delivered to the client.
+            </p>
+            <div class="article-end-actions">
+              <a class="btn btn--dark" href="../../projects/#android-rat">Read the case study
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <button class="btn btn--ghost" type="button" data-copy-article style="color: var(--paper-ink); border-color: var(--paper-line);">
+                Copy article link
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+              </button>
+            </div>
+          </footer>
+
+          <a class="article-next" href="findings-engineers-fix.html">
+            <span>
+              <span>Next note</span>
+              <strong>Write findings engineers can actually fix</strong>
+            </span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="../../index.html" aria-label="Okasha Mehmood — home">
+            <span class="brand-mark" aria-hidden="true">OM</span>
+            <span class="brand-text"><strong>Okasha Mehmood</strong><small>Security engineering</small></span>
+          </a>
+          <p>Field notes on application security, network exposure, mobile reversing, and the craft of remediation.</p>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="../../index.html">Home</a>
+          <a href="../../projects/">Case studies</a>
+          <a href="../">Writing</a>
+          <a href="../../index.html#about">About</a>
+          <a href="../../index.html#contact">Contact</a>
+          <a href="../../assets/Okasha-Mehmood-CV.pdf" download>CV</a>
+          <a href="mailto:ukashamehmet@gmail.com">Email</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> Okasha Mehmood. All rights reserved.</span>
+        <span class="status-line"><span class="status-dot" aria-hidden="true"></span> No trackers. No cookies. No client data.</span>
+        <span>Sanitized for public reading.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/script.js" defer></script>
+</body>
+</html>

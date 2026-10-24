@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Okasha Mehmood — Curriculum Vitae</title>
+  <meta name="description" content="One-page CV for Okasha Mehmood: penetration tester, API security, mobile reverse engineering, and 50+ confidential engagements.">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #101a14;
+      --muted: #56635b;
+      --line: #d9d5c7;
+      --paper: #f7f4eb;
+      --accent: #1d6b45;
+      --accent-soft: #e5efe7;
+      --serif: "Instrument Serif", Georgia, serif;
+      --sans: "Manrope", "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", Consolas, monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    body {
+      margin: 0;
+      background: #d7d4c9;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 9.2pt;
+      line-height: 1.45;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    .toolbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 20px;
+      max-width: 210mm;
+      margin: 18px auto 12px;
+      padding: 0 2mm;
+      font-family: var(--mono);
+      font-size: 7.5pt;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .toolbar a,
+    .toolbar button {
+      border: 1px solid #b9b4a4;
+      background: #f7f4eb;
+      color: var(--ink);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font: inherit;
+      cursor: pointer;
+    }
+
+    .toolbar a:hover,
+    .toolbar button:hover { background: #fff; }
+
+    .page {
+      width: 210mm;
+      min-height: 297mm;
+      margin: 0 auto 24px;
+      padding: 12mm 14mm 10mm;
+      background: var(--paper);
+      box-shadow: 0 24px 70px rgba(0,0,0,.2);
+    }
+
+    .top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 18mm;
+      padding-bottom: 5mm;
+      border-bottom: 1.5px solid var(--ink);
+    }
+
+    .eyebrow {
+      margin: 0 0 2mm;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 7pt;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 31pt;
+      font-weight: 400;
+      letter-spacing: -.045em;
+      line-height: .9;
+    }
+
+    .role {
+      margin: 3mm 0 0;
+      color: var(--muted);
+      font-size: 9.5pt;
+      font-weight: 600;
+      letter-spacing: -.01em;
+    }
+
+    .contact {
+      min-width: 60mm;
+      margin-top: 1mm;
+      text-align: right;
+      font-family: var(--mono);
+      font-size: 6.9pt;
+      line-height: 1.8;
+      color: var(--muted);
+    }
+
+    .contact strong { color: var(--ink); font-weight: 500; }
+
+    .summary {
+      display: grid;
+      grid-template-columns: 1fr 58mm;
+      gap: 10mm;
+      padding: 5mm 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .summary p {
+      margin: 0;
+      color: #344039;
+      font-size: 9.1pt;
+      line-height: 1.55;
+    }
+
+    .summary p strong { color: var(--ink); font-weight: 700; }
+
+    .availability {
+      padding: 3.5mm;
+      border: 1px solid var(--line);
+      background: var(--accent-soft);
+    }
+
+    .availability span {
+      display: block;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 6.5pt;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+
+    .availability strong {
+      display: block;
+      margin-top: 1.5mm;
+      font-family: var(--serif);
+      font-size: 13.5pt;
+      font-weight: 400;
+      letter-spacing: -.02em;
+      line-height: 1;
+    }
+
+    .availability small {
+      display: block;
+      margin-top: 2mm;
+      color: var(--muted);
+      font-size: 7.2pt;
+      line-height: 1.45;
+    }
+
+    .section {
+      padding-top: 4.2mm;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 4mm;
+      margin-bottom: 2.5mm;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      color: var(--accent);
+      font-family: var(--mono);
+      font-size: 6.8pt;
+      font-weight: 500;
+      letter-spacing: .15em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .section-head::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--line);
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2mm;
+      margin-bottom: 1mm;
+    }
+
+    .metric {
+      padding: 2.8mm 3mm;
+      border: 1px solid var(--line);
+      background: rgba(255,255,255,.42);
+    }
+
+    .metric strong {
+      display: block;
+      font-family: var(--serif);
+      font-size: 17pt;
+      font-weight: 400;
+      letter-spacing: -.03em;
+      line-height: 1;
+    }
+
+    .metric span {
+      display: block;
+      margin-top: 1mm;
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 5.8pt;
+      letter-spacing: .06em;
+      line-height: 1.4;
+      text-transform: uppercase;
+    }
+
+    .experience {
+      display: grid;
+      gap: 2.8mm;
+    }
+
+    .job {
+      display: grid;
+      grid-template-columns: 35mm 1fr;
+      gap: 6mm;
+      break-inside: avoid;
+    }
+
+    .job-meta {
+      color: var(--muted);
+      font-family: var(--mono);
+      font-size: 6.4pt;
+      line-height: 1.55;
+      letter-spacing: .01em;
+    }
+
+    .job-meta strong {
+      display: block;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 8.2pt;
+      font-weight: 700;
+      letter-spacing: -.01em;
+      line-height: 1.3;
+    }
+
+    .job-meta em {
+      display: block;
+      margin-top: .5mm;
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    .job-body h3 {
+      margin: 0;
+      font-size: 9.2pt;
+      font-weight: 800;
+      letter-spacing: -.01em;
+      line-height: 1.35;
+    }
+
+    .job-body h3 span { color: var(--muted); font-weight: 500; }
+
+    .job-body p {
+      margin: 1mm 0 0;
+      color: #3e4a43;
+      font-size: 8.25pt;
+      line-height: 1.5;
+    }
+
+    .job-body ul {
+      margin: 1.2mm 0 0;
+      padding-left: 3.2mm;
+      color: #3e4a43;
+      font-size: 8.15pt;
+      line-height: 1.48;
+    }
+
+    .job-body li { margin-bottom: .55mm; }
+    .job-body li::marker { color: var(--accent); }
+
+    .skills {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2mm 8mm;
+    }
+
+    .skill-row {
+      display: grid;
+      grid-template-columns: 30mm 1fr;
+      gap: 3mm;
+      padding: 1.1mm 0;
+      border-bottom: 1px solid var(--line);
+      break-inside: avoid;
+    }
+
+    .skill-row strong {
+      color: var(--ink);
+      font-size: 7.8pt;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+
+    .skill-row span {
+      color: var(--muted);
+      font-size: 7.6pt;
+      line-height: 1.45;
+    }
+
+    .engagements {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.4mm 7mm;
+    }
+
+    .engagement {
+      padding-left: 3mm;
+      border-left: 2px solid var(--accent);
+      break-inside: avoid;
+    }
+
+    .engagement strong {
+      display: block;
+      font-size: 8pt;
+      font-weight: 800;
+      line-height: 1.3;
+    }
+
+    .engagement span {
+      display: block;
+      margin-top: .7mm;
+      color: var(--muted);
+      font-size: 7.35pt;
+      line-height: 1.45;
+    }
+
+    .credentials {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5mm 8mm;
+    }
+
+    .credential {
+      display: grid;
+      grid-template-columns: 3.2mm 1fr;
+      gap: 2mm;
+      padding: 1mm 0;
+      break-inside: avoid;
+    }
+
+    .credential::before {
+      content: "";
+      width: 2mm;
+      height: 2mm;
+      margin-top: 1.25mm;
+      border-radius: 50%;
+      background: var(--accent);
+    }
+
+    .credential strong {
+      display: block;
+      font-size: 7.8pt;
+      font-weight: 800;
+      line-height: 1.35;
+    }
+
+    .credential span {
+      display: block;
+      color: var(--muted);
+      font-size: 7.2pt;
+      line-height: 1.4;
+    }
+
+    .footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 8mm;
+      margin-top: 4mm;
+      padding-top: 2.4mm;
+      border-top: 1px solid var(--line);
+      color: #77827a;
+      font-family: var(--mono);
+      font-size: 5.9pt;
+      line-height: 1.55;
+      letter-spacing: .01em;
+    }
+
+    .footer strong { color: var(--ink); font-weight: 500; }
+
+    @page {
+      size: A4;
+      margin: 0;
+    }
+
+    @media print {
+      body { background: #fff; }
+      .toolbar { display: none; }
+      .page {
+        width: 210mm;
+        min-height: 297mm;
+        margin: 0;
+        padding: 10mm 12mm 8mm;
+        box-shadow: none;
+      }
+
+      .top { padding-bottom: 3.5mm; }
+      h1 { font-size: 28pt; }
+      .role { margin-top: 2.2mm; font-size: 8.8pt; }
+      .contact { line-height: 1.65; }
+
+      .summary { padding: 3.2mm 0; gap: 7mm; }
+      .summary p { font-size: 8.55pt; line-height: 1.48; }
+      .availability { padding: 2.5mm 3mm; }
+      .availability strong { font-size: 12pt; }
+      .availability small { margin-top: 1.3mm; font-size: 6.7pt; }
+
+      .section { padding-top: 3mm; }
+      .section-head { margin-bottom: 1.8mm; }
+
+      .metrics { gap: 1.5mm; }
+      .metric { padding: 2mm 2.5mm; }
+      .metric strong { font-size: 15pt; }
+      .metric span { font-size: 5.4pt; }
+
+      .experience { gap: 1.9mm; }
+      .job { gap: 4mm; }
+      .job-meta { font-size: 5.9pt; line-height: 1.45; }
+      .job-meta strong { font-size: 7.6pt; }
+      .job-body h3 { font-size: 8.5pt; }
+      .job-body ul { margin-top: 0.7mm; font-size: 7.55pt; line-height: 1.4; }
+      .job-body li { margin-bottom: 0.25mm; }
+
+      .engagements { gap: 1.4mm 6mm; }
+      .engagement strong { font-size: 7.5pt; }
+      .engagement span { margin-top: 0.4mm; font-size: 6.75pt; line-height: 1.38; }
+
+      .skills { gap: 0.7mm 6mm; }
+      .skill-row { padding: 0.6mm 0; }
+      .skill-row strong { font-size: 7.1pt; }
+      .skill-row span { font-size: 6.9pt; }
+
+      .credentials { gap: 0.8mm 6mm; }
+      .credential { padding: 0.5mm 0; }
+      .credential strong { font-size: 7.2pt; }
+      .credential span { font-size: 6.6pt; }
+
+      .footer { margin-top: 2.5mm; padding-top: 1.6mm; font-size: 5.4pt; }
+    }
+
+    @media screen and (max-width: 820px) {
+      .toolbar { margin: 12px 14px; }
+      .page {
+        width: auto;
+        min-height: 0;
+        margin: 0 14px 18px;
+        padding: 22px 20px;
+      }
+      .top, .summary, .job, .skills, .engagements, .credentials {
+        grid-template-columns: 1fr;
+      }
+      .top { display: block; }
+      .contact { margin-top: 10px; text-align: left; }
+      .summary { display: block; }
+      .availability { margin-top: 12px; }
+      .metrics { grid-template-columns: 1fr 1fr; }
+      .job { gap: 4px; margin-bottom: 12px; }
+      .footer { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <div class="toolbar">
+    <a href="index.html">&larr; Back to portfolio</a>
+    <button type="button" onclick="window.print()">Print / Save as PDF</button>
+  </div>
+
+  <main class="page">
+    <header class="top">
+      <div>
+        <p class="eyebrow">Curriculum vitae / 2026</p>
+        <h1>Okasha Mehmood</h1>
+        <p class="role">Penetration Tester &middot; API Security &middot; Mobile Reverse Engineering</p>
+      </div>
+      <div class="contact">
+        <div><strong>Islamabad, Pakistan</strong> &middot; remote worldwide</div>
+        <div><a href="mailto:ukashamehmet@gmail.com">ukashamehmet@gmail.com</a></div>
+        <div><a href="tel:+923219116318">+92 321 911 6318</a></div>
+        <div><a href="https://www.linkedin.com/in/okasha-mehmood-0394261a2/">linkedin.com/in/okasha-mehmood</a></div>
+      </div>
+    </header>
+
+    <section class="summary">
+      <p>
+        <strong>Offensive security engineer with 3+ years of specialised experience and 50+ confidential
+        engagements</strong> across government-adjacent, telecom, fintech, SaaS, legal, logistics, and
+        identity environments. I test web, API, mobile, and network systems, then work with engineering
+        teams through remediation and retest. Known for clear reporting, careful evidence handling, and
+        findings that become shipped fixes.
+      </p>
+      <div class="availability">
+        <span>Availability</span>
+        <strong>Senior roles &amp; select contracts</strong>
+        <small>Remote worldwide. References and redacted reports available under NDA.</small>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Selected impact</h2></div>
+      <div class="metrics">
+        <div class="metric"><strong>50+</strong><span>Confidential security engagements</span></div>
+        <div class="metric"><strong>7</strong><span>Sectors tested</span></div>
+        <div class="metric"><strong>3+</strong><span>Years in offensive security</span></div>
+        <div class="metric"><strong>0</strong><span>Client records retained</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Experience</h2></div>
+      <div class="experience">
+        <article class="job">
+          <div class="job-meta">
+            <strong>Jan 2024 — Present</strong>
+            Islamabad, PK
+            <em>Current</em>
+          </div>
+          <div class="job-body">
+            <h3>Penetration Tester <span>&middot; VisionTech 360</span></h3>
+            <ul>
+              <li>Lead web, API, network, and mobile assessments for enterprise and public-sector clients; scope, test, report, and retest.</li>
+              <li>Found and helped close critical cross-tenant authorization, session, upload, and perimeter-exposure paths; built Python/Bash automation to reduce repetitive testing.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="job">
+          <div class="job-meta">
+            <strong>Apr 2024 — Dec 2024</strong>
+            Islamabad, PK
+          </div>
+          <div class="job-body">
+            <h3>OSINT Analyst <span>&middot; VisionTech 360</span></h3>
+            <ul>
+              <li>Mapped external attack surfaces and shadow IT using Maltego, Shodan, SpiderFoot, and Recon-ng; automated intelligence pipelines for exposed credentials and rogue infrastructure.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="job">
+          <div class="job-meta">
+            <strong>Nov 2021 — Present</strong>
+            Remote
+          </div>
+          <div class="job-body">
+            <h3>Independent Security Consultant <span>&middot; Remote</span></h3>
+            <ul>
+              <li>Delivered 50+ assessments across fintech, SaaS, legal, logistics, telecom, and government-adjacent clients; produced executive and developer-facing reports with CVSS, reproducible evidence, prioritised remediation, and re-test memos for SOC 2 and ISO 27001 readiness.</li>
+            </ul>
+          </div>
+        </article>
+
+        <article class="job">
+          <div class="job-meta">
+            <strong>Jun 2023 — Mar 2024</strong>
+            Islamabad, PK
+          </div>
+          <div class="job-body">
+            <h3>Web Penetration Testing Intern <span>&middot; Codesvista</span></h3>
+            <ul>
+              <li>Performed targeted web and REST API testing with Burp Suite Professional, OWASP ZAP, and Nmap; authored remediation advisories and supported internal research labs.</li>
+            </ul>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Selected engagements</h2></div>
+      <div class="engagements">
+        <div class="engagement">
+          <strong>Multi-tenant SaaS &middot; cross-tenant BOLA</strong>
+          <span>Proved cross-organization read/write access; enforced tenant scope at the query layer and retested 40+ object routes before a SOC 2 audit.</span>
+        </div>
+        <div class="engagement">
+          <strong>National telecom &middot; LFI + SQL injection</strong>
+          <span>Confirmed path traversal and injection in public portals with minimal evidence; drove canonicalisation, parameterised queries, privilege reduction, and segmentation.</span>
+        </div>
+        <div class="engagement">
+          <strong>External perimeter &middot; WAF bypass</strong>
+          <span>Exposed direct-to-origin access and public management planes; reduced observable attack surface by 78% with origin locking, ZTNA, and asset ownership.</span>
+        </div>
+        <div class="engagement">
+          <strong>Android malware &middot; rogue VPN</strong>
+          <span>Reversed a dropper abusing VpnService, reconstructed the second-stage loader, and delivered YARA, Sigma, and MDM controls for the fleet.</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Technical capabilities</h2></div>
+      <div class="skills">
+        <div class="skill-row"><strong>App &amp; API</strong><span>BOLA/BFLA, auth/session, SSRF, file upload, deserialization, business logic, GraphQL, OWASP WSTG/API Top 10</span></div>
+        <div class="skill-row"><strong>Mobile &amp; RE</strong><span>Android, Jadx, Apktool, Frida, SSL pinning, root detection, crypto protocols, native analysis, MASTG/MASVS</span></div>
+        <div class="skill-row"><strong>Network &amp; ASM</strong><span>External footprint, origin exposure, WAF bypass, exposed management planes, segmentation, TLS, ZTNA, OSINT</span></div>
+        <div class="skill-row"><strong>Tooling &amp; delivery</strong><span>Burp Suite Pro, Nmap, Masscan, Amass, ffuf, SQLmap, Wireshark, Python, Bash, PowerShell, CVSS, MITRE ATT&amp;CK</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="section-head"><h2>Education &amp; certifications</h2></div>
+      <div class="credentials">
+        <div class="credential"><div><strong>BSc Computer Science</strong><span>University of Science &amp; Technology &middot; 2023 &middot; GPA 3.3/4.0</span></div></div>
+        <div class="credential"><div><strong>Certified Red Team Analyst (CRTA)</strong><span>CyberWarFare Labs</span></div></div>
+        <div class="credential"><div><strong>Cybersecurity Specialist</strong><span>NAVTTC</span></div></div>
+        <div class="credential"><div><strong>Python for Cybersecurity</strong><span>Cybrary</span></div></div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <span><strong>Confidentiality:</strong> client names, domains, IPs, and data are withheld from this CV and the portfolio.</span>
+      <span><strong>Portfolio &amp; references:</strong> available on request &middot; full case studies online.</span>
+    </footer>
+  </main>
+</body>
+</html>

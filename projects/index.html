@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Security Case Studies — Okasha Mehmood</title>
+  <meta name="description" content="Eight sanitized penetration testing, API, mobile reversing, and vulnerability research case studies. See how each issue was found, fixed, and verified.">
+  <meta name="author" content="Okasha Mehmood">
+  <meta name="theme-color" content="#06100c">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Security Case Studies — Okasha Mehmood">
+  <meta property="og:description" content="Eight sanitized engagements. Context, discovery, proof, remediation, and verification — with client identifiers removed.">
+  <meta property="og:image" content="../assets/og-card.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Security Case Studies — Okasha Mehmood">
+  <meta name="twitter:description" content="Eight sanitized security engagements, told through the work.">
+  <meta name="twitter:image" content="../assets/og-card.png">
+
+  <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../assets/favicon.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../assets/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="page-projects">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../index.html" aria-label="Okasha Mehmood — home">
+        <span class="brand-mark" aria-hidden="true">OM</span>
+        <span class="brand-text"><strong>Okasha Mehmood</strong><small>Security engineering</small></span>
+      </a>
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <a href="../projects/" aria-current="page">Work</a>
+        <a href="../index.html#approach">Approach</a>
+        <a href="../index.html#about">About</a>
+        <a href="../blog/">Writing</a>
+        <a class="nav-cta" href="../index.html#contact">
+          Let&rsquo;s talk
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+        </a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="page-hero">
+      <div class="container">
+        <nav class="breadcrumb" aria-label="Breadcrumb">
+          <a href="../index.html">Home</a>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+          <span>Case studies</span>
+        </nav>
+        <h1>Proof, with the names <em>removed.</em></h1>
+        <div class="page-hero-bottom">
+          <p class="page-hero-lead">
+            Eight sanitized case studies from confidential engagements. Each one covers the context,
+            how the issue was found, the smallest proof, the repair, and the retest. Client names,
+            domains, IPs, payloads, and data are intentionally absent.
+          </p>
+          <div class="page-hero-meta" aria-label="Collection details">
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 3h10v18H7z"/><path d="M10 8h4M10 12h4M10 16h3"/></svg>
+              8 case studies
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+              Sanitized
+            </span>
+            <span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 21s7-5.2 7-12a7 7 0 1 0-14 0c0 6.8 7 12 7 12Z"/><circle cx="12" cy="9" r="2.4"/></svg>
+              Islamabad / remote
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="projects-main">
+      <div class="container">
+        <div class="projects-top">
+          <div class="confidentiality-bar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="M12 8v5M12 16h.01"/></svg>
+            <p><strong>Confidentiality note.</strong> These write-ups are generalized for public reading. They exclude organization and product names, hostnames, IPs, CIDRs, ASNs, exact dates, client data, credentials, session values, malware infrastructure, and copy-paste exploit payloads. Redacted reports and references are available under NDA.</p>
+          </div>
+          <div class="confidentiality-bar" style="border-color: rgba(125,232,174,.18); background: rgba(125,232,174,.04);">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" style="color: var(--accent);"><path d="m5 12 4 4L19 6"/></svg>
+            <p><strong>How to read this page.</strong> Each case is folded into a summary. Open a case to see the discovery logic, a sanitized evidence pattern, the remediation, and how the fix was verified. Every case is written from engagement records, not from memory.</p>
+          </div>
+        </div>
+
+        <div class="filter-bar" data-project-filters>
+          <span class="filter-label">Filter</span>
+          <div class="filter-list" role="group" aria-label="Filter case studies by category">
+            <button class="filter-btn" type="button" data-filter="all" aria-pressed="true">All</button>
+            <button class="filter-btn" type="button" data-filter="web" aria-pressed="false">Web</button>
+            <button class="filter-btn" type="button" data-filter="api" aria-pressed="false">API</button>
+            <button class="filter-btn" type="button" data-filter="network" aria-pressed="false">Network</button>
+            <button class="filter-btn" type="button" data-filter="mobile" aria-pressed="false">Mobile</button>
+            <button class="filter-btn" type="button" data-filter="research" aria-pressed="false">Research</button>
+          </div>
+          <span class="filter-count" data-filter-count aria-live="polite"><strong>8</strong> of 8 shown</span>
+          <button class="filter-btn" type="button" data-expand-all>Expand all</button>
+        </div>
+
+        <div class="case-list">
+          <!-- 01 -->
+          <details class="case" id="saas-bola" data-cases="web api">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">01</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Web &amp; API</span>
+                    <span class="severity severity--critical">Critical</span>
+                    <span class="chip">SaaS</span>
+                  </div>
+                  <h2>One query, every tenant</h2>
+                  <p>A multi-tenant legal case-management platform authenticated every request but failed to bind objects to the requesting tenant. The result was cross-organization read and write access.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">BOLA / IDOR</span>
+                    <span class="tag">Tenant isolation</span>
+                    <span class="tag">Production debug leak</span>
+                    <span class="tag">SOC 2 readiness</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Engagement</dt><dd>Authenticated web + API test</dd></div>
+                <div><dt>Surface</dt><dd>SaaS platform, 3 roles</dd></div>
+                <div><dt>Window</dt><dd>10 testing days</dd></div>
+                <div><dt>Disclosure</dt><dd>Coordinated · 2025</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>The client operates a multi-tenant case-management platform for legal and investigation teams. Each customer organization expects its matters, notes, and identity data to be invisible to every other tenant. A SOC 2 Type II audit was approaching, and the engineering team wanted an independent test of tenant isolation rather than another scanner run.</p>
+                <p>I was given two isolated test tenants, one administrative account, and one standard user account. The objective was specific: prove whether the application enforced tenant boundaries at the object level, not just at login.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Built a two-tenant matrix.</strong> I mapped every role and every object action — read, update, export, comment, assign, delete — then created a test plan that treated each combination as a separate authorization decision.</li>
+                  <li><strong>Traced the API from the client.</strong> The web application was a single-page app. I reviewed its JavaScript bundles to recover route patterns, then compared them with the API documentation and observed traffic.</li>
+                  <li><strong>Tested object ownership, not just authentication.</strong> Using Tenant A&rsquo;s session, I requested an object identifier belonging to Tenant B. The server returned the full record with a <code>200 OK</code> instead of a <code>403</code> or <code>404</code>.</li>
+                  <li><strong>Confirmed the pattern at the collection layer.</strong> A list endpoint returned records from multiple organizations, and nested staff objects leaked internal usernames and roles. Debug behavior in production exposed route metadata and query traces, which explained the missing tenant filter.</li>
+                  <li><strong>Tested the write path.</strong> The same object identifier accepted a <code>PATCH</code> from Tenant A, allowing status and priority fields on Tenant B&rsquo;s record to be changed. I stopped after one synthetic test record and did not export client data.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <p>A sanitized request pattern was enough to demonstrate the boundary failure reproducibly. Names, identifiers, and values are replaced.</p>
+                <pre class="case-code"><code><span class="c"># Tenant A session requests Tenant B's object</span>
+GET /api/v1/&lt;resource&gt;/&lt;object-id&gt; HTTP/1.1
+Authorization: Bearer &lt;tenant-a-session&gt;
+
+<span class="r">HTTP/1.1 200 OK</span>
+{
+  "tenant": "&lt;tenant-b&gt;",
+  "record": "&lt;redacted&gt;",
+  "staff": { "username": "&lt;internal-user&gt;", "role": "&lt;internal-role&gt;" }
+}</code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>How we fixed it</h3>
+                <ol class="case-steps">
+                  <li><strong>Made tenant scope a data-layer default.</strong> A tenant-aware manager scoped every queryset to the authenticated user&rsquo;s organization. Application code could no longer call an unscoped global model lookup by accident.</li>
+                  <li><strong>Added object-level permissions.</strong> A deny-by-default permission class checked ownership before serialization or mutation. Foreign objects return <code>404</code> to avoid confirming their existence.</li>
+                  <li><strong>Used a composite lookup.</strong> Object retrieval now queries by both tenant and object identifier, rather than fetching globally and checking afterwards.</li>
+                  <li><strong>Removed production debug behavior.</strong> Debug mode was disabled, a custom error handler replaced framework tracebacks, and exposed environment secrets were rotated.</li>
+                  <li><strong>Reduced the response surface.</strong> List serializers were split from detail serializers; internal staff objects and sensitive fields no longer appear in tenant-facing responses.</li>
+                </ol>
+                <pre class="case-code"><code><span class="c"># Illustrative fix: scope before retrieval, then authorize</span>
+def get_queryset(self):
+    return Case.objects.for_tenant(self.request.user.tenant)
+
+def get_object(self):
+    return get_object_or_404(
+        self.get_queryset(),
+        object_id=self.kwargs["object_id"],
+    )</code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>I replayed the original requests and extended the test to every object route in the application. Cross-tenant reads, writes, exports, and nested-object access all failed closed. The engineering team added a two-tenant regression suite to CI so the boundary could not silently regress.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>40+</strong><span>object routes retested</span></div>
+                  <div class="outcome"><strong>100%</strong><span>test-tenant isolation</span></div>
+                  <div class="outcome"><strong>0</strong><span>client records retained</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>Why it mattered:</strong> the application was not missing authentication. It was missing the second question every multi-tenant system must answer on every request: <em>does this user&rsquo;s tenant own this row?</em></p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">BOLA</span><span class="tag">Django REST</span><span class="tag">Authorization</span><span class="tag">Retest</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- 02 -->
+          <details class="case" id="member-portal" data-cases="web">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">02</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Web</span>
+                    <span class="severity severity--critical">Critical</span>
+                    <span class="chip">Membership</span>
+                  </div>
+                  <h2>The debug folder that opened the front door</h2>
+                  <p>A production debug directory exposed live session state, enabling account takeover. The same portal accepted executable uploads into a web-served directory.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">Session hijacking</span>
+                    <span class="tag">Unrestricted upload</span>
+                    <span class="tag">Origin exposure</span>
+                    <span class="tag">PII protection</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Engagement</dt><dd>Black + grey-box web test</dd></div>
+                <div><dt>Surface</dt><dd>Member portal + document upload</dd></div>
+                <div><dt>Window</dt><dd>12 testing days</dd></div>
+                <div><dt>Disclosure</dt><dd>Coordinated · 2025</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>The portal handles member registration, identity-document uploads, digital membership cards, payments, and facility bookings for a high-profile membership organization. It sat behind a reverse proxy and a web application firewall, and the team reasonably assumed that the edge was enforcing the important controls.</p>
+                <p>The assessment was scoped to the public portal and its document workflows. The client asked for evidence of account takeover and file-processing risk, not a broad infrastructure scan.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Mapped the perimeter.</strong> Subdomain enumeration, certificate transparency, and DNS history identified several administrative and staging hostnames that did not share the primary site&rsquo;s proxy configuration.</li>
+                  <li><strong>Found a direct path to the origin.</strong> One of those hostnames resolved directly to the hosting origin. Sending a request with the main site&rsquo;s host header returned the application, bypassing the edge WAF entirely.</li>
+                  <li><strong>Discovered a production debug directory.</strong> Directory discovery exposed a framework debug folder that was readable over HTTP. It contained execution traces and session state, including live session identifiers.</li>
+                  <li><strong>Replayed a session without credentials.</strong> I injected a recovered session cookie into a clean browser profile and reached the authenticated member dashboard. I limited the proof to a synthetic test account and one metadata response; no identity documents were downloaded.</li>
+                  <li><strong>Tested the upload boundary.</strong> The document-upload endpoint validated neither extension nor file content and stored files under a web-executable path. I uploaded a harmless proof file that returned a unique token, confirmed execution, then removed it with the client&rsquo;s approval.</li>
+                  <li><strong>Found exposed configuration.</strong> A dotfile in the web root was directly readable and exposed key names and database settings. I confirmed the exposure without copying secret values; the client rotated everything afterward.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <pre class="case-code"><code><span class="c"># Sanitized chain — values removed</span>
+GET /&lt;debug-path&gt;/&lt;dump&gt;.json          <span class="r">→ 200 (session state exposed)</span>
+Cookie: &lt;session&gt;                        <span class="y">→ authenticated member dashboard</span>
+
+POST /&lt;upload-endpoint&gt;                  <span class="r">→ 200</span>
+filename="proof.&lt;server-side-extension&gt;" <span class="r">→ stored in executable web path</span></code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>How we fixed it</h3>
+                <ol class="case-steps">
+                  <li><strong>Contained the active compromise.</strong> All sessions were invalidated, application and database secrets were rotated, and administrative users were required to re-authenticate with MFA.</li>
+                  <li><strong>Removed debug tooling from production.</strong> Debug logging was disabled, writable and diagnostic directories moved outside the web root, and direct access to dotfiles and debug paths was denied at both edge and origin.</li>
+                  <li><strong>Rebuilt the upload pipeline.</strong> The new flow allowlists image/PDF extensions, verifies magic bytes, re-encodes images, assigns random names, stores files outside the executable root, and scans uploads before release.</li>
+                  <li><strong>Locked the origin to the edge.</strong> Ingress now accepts only the provider&rsquo;s published ranges, with authenticated origin pulls or mutual TLS. Staging DNS records were removed from public zones.</li>
+                  <li><strong>Hardened the session layer.</strong> Cookies gained <code>Secure</code>, <code>HttpOnly</code>, and <code>SameSite</code> attributes; session rotation on login was enforced; HSTS and a restrictive content-security policy were deployed.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>Replaying the captured session returned <code>401</code>. Mixed-case, double-extension, and content-type mismatch uploads were rejected. Direct-to-origin requests timed out, and the exposed configuration path returned <code>404</code>. The client also reviewed access logs around the exposure window and found no evidence of document downloads.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>401</strong><span>replayed session result</span></div>
+                  <div class="outcome"><strong>3</strong><span>exploit paths closed</span></div>
+                  <div class="outcome"><strong>0</strong><span>identity documents accessed</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>The lesson:</strong> a WAF protects the hostname configured in front of it. A forgotten staging record, an exposed origin, or a debug directory in the web root can route around the entire control plane.</p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">Session security</span><span class="tag">File upload</span><span class="tag">Origin lock</span><span class="tag">Incident containment</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- 03 -->
+          <details class="case" id="logistics-perimeter" data-cases="network">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">03</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Network</span>
+                    <span class="severity severity--high">High</span>
+                    <span class="chip">Logistics</span>
+                  </div>
+                  <h2>The WAF was never the wall</h2>
+                  <p>Public DNS and certificate data exposed the hosting origin. Direct requests bypassed the edge, and administrative gateways were reachable from the internet.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">External ASM</span>
+                    <span class="tag">Origin exposure</span>
+                    <span class="tag">Management plane</span>
+                    <span class="tag">ZTNA</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Engagement</dt><dd>External perimeter + ASM</dd></div>
+                <div><dt>Surface</dt><dd>Hybrid hosting estate</dd></div>
+                <div><dt>Window</dt><dd>15 testing days</dd></div>
+                <div><dt>Disclosure</dt><dd>Coordinated · 2025</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>A logistics and supply-chain group asked for an external assessment of its internet-facing estate. The primary websites were behind a CDN and WAF, but the organization had accumulated years of hosting, acquisitions, and staging environments. The goal was to see the perimeter as an outsider would — including everything the asset inventory had forgotten.</p>
+                <p>The engagement was non-destructive: no password spraying, no exploitation of management services, and no access to production data. Where a login surface was found, the finding was the exposure itself.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Enumerated the external footprint.</strong> DNS, WHOIS, certificate transparency, and passive infrastructure data produced subdomains, hosting ranges, and mail-related records that were not in the client&rsquo;s current inventory.</li>
+                  <li><strong>Followed the mail records.</strong> A public SPF record listed the organization&rsquo;s origin hosts. Cross-referencing those addresses with TLS certificates and subdomain history confirmed that several belonged to the primary web estate.</li>
+                  <li><strong>Verified the WAF bypass.</strong> A direct HTTPS request to an origin address, with the public host header, returned the application. Cloudflare headers and rate-limit behavior were absent.</li>
+                  <li><strong>Mapped the exposed services.</strong> Light-touch port scanning found a remote desktop gateway, a database administration console, and a staging API on public addresses without source-IP allowlists or SSO.</li>
+                  <li><strong>Checked the management surface.</strong> I confirmed the login pages and TLS configuration only. No credentials were guessed and no session was established. The exposure was enough to demonstrate the risk.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <pre class="case-code"><code><span class="c"># Direct-to-origin request — sanitized</span>
+curl --resolve &lt;public-host&gt;:443:&lt;origin-address&gt; https://&lt;public-host&gt;/
+<span class="r">HTTP/1.1 200 OK</span>   <span class="c"># response from origin, no edge headers</span>
+
+<span class="c"># Publicly reachable management surfaces</span>
+&lt;admin-gateway&gt;:443  <span class="y">→ login page, no IP allowlist</span>
+&lt;database-console&gt;  <span class="y">→ login page, no SSO</span></code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>How we fixed it</h3>
+                <ol class="case-steps">
+                  <li><strong>Made the origin private by policy.</strong> Ingress firewall rules now accept HTTP/HTTPS only from the CDN provider&rsquo;s published ranges, with authenticated origin pulls or mutual TLS so a spoofed source cannot simply claim to be the edge.</li>
+                  <li><strong>Moved management behind ZTNA.</strong> The remote desktop gateway and database console were removed from public DNS and placed behind a zero-trust access proxy with device posture and phishing-resistant MFA.</li>
+                  <li><strong>Cleaned the DNS and mail records.</strong> SPF, MX, and staging records were reviewed so they no longer advertise origin infrastructure. Historical records were documented and monitored rather than left to memory.</li>
+                  <li><strong>Built an owned asset inventory.</strong> The client adopted a continuous external discovery process with named owners, review cadence, and alerting for new certificates or hosts appearing outside the approved range.</li>
+                  <li><strong>Added defense in depth.</strong> WAF rules, rate limits, and alerting were tuned, but no longer treated as the only control protecting the origin.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>After the change, direct-to-origin requests timed out, management hostnames no longer resolved publicly, and the exposed services were reachable only through the access proxy. A rescan of the external range showed a 78% reduction in observable attack surface.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>78%</strong><span>external surface reduction</span></div>
+                  <div class="outcome"><strong>3</strong><span>management paths removed</span></div>
+                  <div class="outcome"><strong>0</strong><span>credentials attempted</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>The lesson:</strong> a WAF is an application-layer control, not a network boundary. If the origin is reachable directly, the attacker simply chooses a different route.</p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">ASM</span><span class="tag">Cloudflare</span><span class="tag">SPF</span><span class="tag">Zero trust</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- 04 -->
+          <details class="case" id="telecom-perimeter" data-cases="network web">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">04</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Network</span>
+                    <span class="severity severity--critical">Critical</span>
+                    <span class="chip">Telecom</span>
+                  </div>
+                  <h2>When a CMS becomes a doorway</h2>
+                  <p>Path traversal in a public CMS component exposed system files and configuration. Two separate SQL injection classes reached back-end database metadata.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">LFI</span>
+                    <span class="tag">SQL injection</span>
+                    <span class="tag">National infrastructure</span>
+                    <span class="tag">Segmentation</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Engagement</dt><dd>External network + web test</dd></div>
+                <div><dt>Surface</dt><dd>40+ public subdomains</dd></div>
+                <div><dt>Window</dt><dd>18 testing days</dd></div>
+                <div><dt>Disclosure</dt><dd>Coordinated · 2024–25</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>A national telecom and regulatory environment asked for an external assessment of its public infrastructure. The estate included consumer service portals, mobile financial services, a regulatory search application, and internal call-center tooling. Because of the sensitivity, the rules of engagement were unusually strict: prove the first viable path, capture the minimum evidence, stop, and escalate immediately.</p>
+                <p>This is the kind of environment where a &ldquo;full dump&rdquo; is not a demonstration of skill. Restraint is part of the test.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Mapped the ASN and certificate history.</strong> I combined passive DNS, certificate transparency, and netblock ownership to identify more than 40 live subdomains, including staging and regional service portals.</li>
+                  <li><strong>Profiled the public applications.</strong> One CMS-based portal exposed an asset parameter that accepted a filename. Normal requests returned expected content; traversal sequences escaped the intended directory.</li>
+                  <li><strong>Verified file read with one harmless target.</strong> I read the first lines of a standard system account file to confirm traversal, then a configuration file header to confirm exposure of secret material. I did not retrieve subscriber data or bulk configuration.</li>
+                  <li><strong>Tested the search surface.</strong> A regulatory record filter reflected database metadata through a union-based injection. A separate call-center login showed a repeatable time delay with a statistical check across multiple requests, confirming blind injection rather than network jitter.</li>
+                  <li><strong>Stopped at metadata.</strong> The proof reached database version and current user only. No tables, subscriber records, or business data were enumerated. The client was notified the same day.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <pre class="case-code"><code><span class="c"># Sanitized traversal proof</span>
+GET /&lt;component&gt;?&lt;asset-param&gt;=../../../../etc/passwd
+<span class="r">HTTP/1.1 200 OK</span>  <span class="c">→ first lines of system account file</span>
+
+<span class="c"># Sanitized SQLi proof — metadata only</span>
+&lt;filter&gt;' UNION SELECT @@version, current_user()-- -
+<span class="r">→ database version and service account disclosed</span></code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>How we fixed it</h3>
+                <ol class="case-steps">
+                  <li><strong>Closed the file-read path.</strong> The asset parameter was replaced with a strict identifier allowlist. Path separators and encoded traversal were rejected before filesystem access, and PHP execution was constrained with an open-basedir boundary.</li>
+                  <li><strong>Removed the vulnerable component.</strong> The unused CMS plugin was deleted rather than patched in place, reducing the long-term maintenance surface.</li>
+                  <li><strong>Parameterized every query.</strong> Dynamic SQL in the search and login paths was converted to prepared statements with typed parameters. Verbose database errors were suppressed.</li>
+                  <li><strong>Reduced database privilege.</strong> The public application account lost unnecessary schema and file permissions. Secrets found in configuration were rotated, and config files were moved outside the web root.</li>
+                  <li><strong>Segmented the public tier.</strong> Internet-facing portals were isolated from core routing and subscriber systems, with egress filtering and a reviewed allowlist between tiers.</li>
+                  <li><strong>Added regression coverage.</strong> Traversal, encoding, and injection test cases were added to the release pipeline, alongside a WAF virtual patch for immediate coverage.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>Traversal payloads returned <code>400</code>/<code>404</code>, including encoded and double-encoded variants. The blind injection timing returned to baseline across repeated measurements, and the union path no longer reflected metadata. The database account was confirmed to lack file and schema-level access.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>40+</strong><span>public hosts mapped</span></div>
+                  <div class="outcome"><strong>2</strong><span>critical classes closed</span></div>
+                  <div class="outcome"><strong>0</strong><span>subscriber records accessed</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>Why it mattered:</strong> the file-read and injection paths were separate findings, but they shared a root cause — public components being trusted with direct access to system and data layers. Segregation limited what either could reach.</p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">Path traversal</span><span class="tag">SQLi</span><span class="tag">Secure SDLC</span><span class="tag">Segmentation</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- 05 -->
+          <details class="case" id="mobile-crypto" data-cases="mobile api">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">05</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Mobile &amp; API</span>
+                    <span class="severity severity--high">High</span>
+                    <span class="chip">Identity</span>
+                  </div>
+                  <h2>Reading the envelope</h2>
+                  <p>A mobile identity service wrapped every request in a proprietary cryptographic envelope. The scheme was sound enough to stop casual inspection — but not enough to stop replay.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">Android reversing</span>
+                    <span class="tag">Frida</span>
+                    <span class="tag">Crypto protocol</span>
+                    <span class="tag">Replay protection</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Engagement</dt><dd>Mobile app + API audit</dd></div>
+                <div><dt>Surface</dt><dd>Android client, identity API</dd></div>
+                <div><dt>Window</dt><dd>14 testing days</dd></div>
+                <div><dt>Disclosure</dt><dd>Coordinated · 2025</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>The client operates a mobile identity and verification service. The Android app did not send plain JSON; every request body was binary and accompanied by a custom key header. The engineering team believed the proprietary envelope made automated abuse impractical.</p>
+                <p>The assessment asked a narrower question than &ldquo;can the app be reverse engineered?&rdquo; — it asked whether the protocol provided a real security boundary or only obfuscation.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Decompiled and reviewed the client.</strong> Jadx and Apktool exposed the network stack, interceptor classes, and a public-key asset embedded in the APK. The app used certificate pinning and root detection, which I bypassed in a lab build with Frida hooks.</li>
+                  <li><strong>Observed the crypto calls.</strong> Hooks around the platform cipher, key factory, and digest classes showed where the session key was generated, wrapped, and attached to the request.</li>
+                  <li><strong>Reconstructed the envelope.</strong> The body was GZIP-compressed, encrypted with a random AES-256 key in CBC mode, and prefixed with the raw IV. The AES key was encrypted with the embedded RSA-2048 public key using PKCS#1 v1.5 and sent in a custom header.</li>
+                  <li><strong>Built a standalone client.</strong> I implemented the same envelope in Python against a test account and confirmed the server accepted synthetically generated requests. This proved the protocol was not bound to the official app.</li>
+                  <li><strong>Tested the trust model.</strong> There was no server-issued nonce, timestamp window, device attestation, or meaningful per-identity rate limit. A captured request could be replayed, and new requests could be generated once the public key was known.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <pre class="case-code"><code><span class="c"># Reconstructed request envelope (illustrative)</span>
+body    = iv || AES-256-CBC(gzip(json), key, iv)
+header  = base64(RSA-PKCS1v1.5(public_key, key))
+
+POST /&lt;api-path&gt;
+X-Client-Key: &lt;wrapped-key&gt;
+&lt;binary body&gt;
+
+<span class="r">→ accepted without app attestation or server nonce</span></code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>How we fixed it</h3>
+                <ol class="case-steps">
+                  <li><strong>Added server-issued challenges.</strong> Each session now receives a short-lived nonce and sequence counter. Requests include a signature over the nonce, timestamp, and body digest, and the server rejects duplicates.</li>
+                  <li><strong>Bound requests to a device identity.</strong> The client uses a hardware-backed Android Keystore key, with Play Integrity attestation for sensitive actions. The server verifies both before issuing elevated tokens.</li>
+                  <li><strong>Reduced replay value.</strong> Access tokens are short-lived and scoped to a device session. A timestamp window and idempotency keys prevent request reuse.</li>
+                  <li><strong>Moved to authenticated encryption.</strong> New protocol versions use AES-GCM or ChaCha20-Poly1305 with associated data, replacing the unauthenticated CBC construction.</li>
+                  <li><strong>Enforced per-identity limits.</strong> Rate limits and anomaly detection now key off the authenticated identity and device, not just source IP. Bulk enumeration patterns trigger review and throttling.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>A replayed request was rejected, a synthetic client without a valid nonce could not complete a session, and rate limits triggered after a small number of requests from the same identity. The updated client continued to work with the new protocol, and the old version was retired.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>2048</strong><span>bit RSA key recovered</span></div>
+                  <div class="outcome"><strong>4</strong><span>stage envelope reversed</span></div>
+                  <div class="outcome"><strong>0</strong><span>customer records accessed</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>The lesson:</strong> encrypted transport is not the same as trusted transport. If the client holds the only secret and the server accepts any well-formed envelope, the crypto is confidentiality — not authentication.</p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">Frida</span><span class="tag">AES / RSA</span><span class="tag">Play Integrity</span><span class="tag">mTLS</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- 06 -->
+          <details class="case" id="android-rat" data-cases="mobile">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">06</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Mobile / RE</span>
+                    <span class="severity severity--critical">Critical</span>
+                    <span class="chip">Malware</span>
+                  </div>
+                  <h2>The app that became the network</h2>
+                  <p>A trojan disguised as a traffic-notice app abused Android&rsquo;s VPN service to become the device&rsquo;s egress point, then loaded a second-stage payload from rotating infrastructure.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">Android</span>
+                    <span class="tag">VpnService</span>
+                    <span class="tag">Dropper</span>
+                    <span class="tag">Detection engineering</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Engagement</dt><dd>Android malware analysis</dd></div>
+                <div><dt>Surface</dt><dd>APK, native loader, network</dd></div>
+                <div><dt>Window</dt><dd>9 analysis days</dd></div>
+                <div><dt>Disclosure</dt><dd>Private client · 2025</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>The sample arrived through a targeted SMS and WhatsApp campaign. It impersonated a municipal traffic-violation portal and asked victims to install an APK to &ldquo;review a notice.&rdquo; The client needed to understand the delivery chain, the device capabilities it abused, and the network signatures its fleet could detect.</p>
+                <p>Analysis was performed in an isolated lab. Egress was restricted at the hypervisor boundary, and no live payload was allowed to reach production infrastructure.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Started with the manifest.</strong> The APK requested <code>BIND_VPN_SERVICE</code>, <code>RECEIVE_BOOT_COMPLETED</code>, and <code>REQUEST_INSTALL_PACKAGES</code> — a combination that gives a sideloaded app network control, persistence, and the ability to install another payload.</li>
+                  <li><strong>Located the rogue VPN service.</strong> The service built a local TUN interface with a private address and a default route, effectively directing all device traffic into the app&rsquo;s own socket layer.</li>
+                  <li><strong>Traced the second stage.</strong> A broadcast receiver fetched an encrypted payload from rotating infrastructure, wrote it to the app&rsquo;s private cache, decrypted it with a bundled key, and loaded it dynamically with <code>DexClassLoader</code>.</li>
+                  <li><strong>Observed behavior dynamically.</strong> With Frida and a lab network capture, I confirmed the service start, the route configuration, and the staged download. The capture showed cleartext DNS and metadata, not magical TLS decryption.</li>
+                  <li><strong>Built detection content.</strong> I mapped the observed behavior to host and network indicators, wrote a YARA rule for the APK family, and produced Sigma logic for endpoint telemetry around VPN-service abuse and dynamic DEX loading.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <pre class="case-code"><code><span class="c">// Sanitized behavior sketch — values generalized</span>
+VpnService.Builder()
+  .addAddress(&lt;private-tun-address&gt;, 32)
+  .addRoute("0.0.0.0", 0)          <span class="r">// capture all egress</span>
+  .addDnsServer(&lt;external-resolver&gt;)
+  .establish()
+
+<span class="c">// Second stage</span>
+download(&lt;encrypted-dex&gt;) → decrypt(&lt;bundled-key&gt;) → DexClassLoader.load()</code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>What it could — and could not — see</h3>
+                <p>A local VPN is a powerful position. It can observe destinations, DNS queries, traffic volume, and any cleartext HTTP. It can redirect or block connections. It cannot, by itself, decrypt modern TLS without another capability such as a trusted certificate or a compromised endpoint.</p>
+                <p>The accurate risk was therefore not &ldquo;the app reads every encrypted message.&rdquo; It was that a sideloaded app had been granted control of the device&rsquo;s entire network path, with the ability to stage additional code. That is more than enough to enable credential phishing, traffic manipulation, and follow-on payloads.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How we defended it</h3>
+                <ol class="case-steps">
+                  <li><strong>Blocked sideloading on managed devices.</strong> MDM policy now disallows installation from unknown sources and alerts on apps requesting VPN or install-packages permissions.</li>
+                  <li><strong>Added network detections.</strong> The client deployed the indicators and YARA signature, blocked the observed infrastructure patterns, and monitored for external DNS resolvers and anomalous VPN interfaces.</li>
+                  <li><strong>Gave the SOC a playbook.</strong> The response runbook covers app removal, credential rotation, session revocation, and review of any second-stage activity.</li>
+                  <li><strong>Tuned user awareness.</strong> The campaign relied on a believable municipal notice. Awareness guidance focused on the install prompt and the VPN permission, not on generic &ldquo;don&rsquo;t click links&rdquo; advice.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>The YARA rule matched the sample and a controlled variant. Sigma logic fired on synthetic telemetry for VPN-service creation and dynamic DEX loading. The indicators were deployed to the client&rsquo;s endpoint and network tooling, and the playbook was exercised with the SOC.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>14</strong><span>high-fidelity indicators</span></div>
+                  <div class="outcome"><strong>2</strong><span>detection formats delivered</span></div>
+                  <div class="outcome"><strong>0</strong><span>live C2 interactions</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>The lesson:</strong> permission abuse is a capability. A user who grants VPN access to an unknown app has handed it the same position a network attacker spends weeks trying to reach.</p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">Android</span><span class="tag">YARA</span><span class="tag">Sigma</span><span class="tag">MDM</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- 07 -->
+          <details class="case" id="cicd-rce" data-cases="research">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">07</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Research</span>
+                    <span class="severity severity--critical">Critical</span>
+                    <span class="chip">CI/CD</span>
+                  </div>
+                  <h2>Trust, but deserialize</h2>
+                  <p>An unauthenticated build-agent endpoint passed XML into an unpinned deserializer. A vendor-specific object graph reached command execution before authentication.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">CWE-502</span>
+                    <span class="tag">XStream</span>
+                    <span class="tag">Pre-auth RCE</span>
+                    <span class="tag">Coordinated disclosure</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Engagement</dt><dd>Vulnerability research</dd></div>
+                <div><dt>Surface</dt><dd>CI/CD agent control plane</dd></div>
+                <div><dt>Window</dt><dd>21 research days</dd></div>
+                <div><dt>Disclosure</dt><dd>Vendor coordinated</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>The target was an enterprise CI/CD orchestration product with a distributed build-agent model. Agents register with a central controller, poll for work, and report command results. This control plane is unusually valuable: whoever can speak to it convincingly may be able to run code in the build environment, where source code and deployment credentials live.</p>
+                <p>The research focused on the agent registration and error-reporting path, not on the product&rsquo;s authenticated administrative UI.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Mapped the trust boundary.</strong> A synthetic agent could register a session without presenting a pre-shared credential. The controller accepted the session and exposed the agent command surface.</li>
+                  <li><strong>Traced the error path.</strong> The command error endpoint accepted XML from a registered agent and passed it to a deserializer configured without a type allowlist. That is the classic condition for object injection.</li>
+                  <li><strong>Looked for reachable gadgets.</strong> Standard library and framework chains were filtered. A product-specific exception object with an embedded database data source was not.</li>
+                  <li><strong>Built the smallest chain.</strong> Instantiating that object triggered a database initialization path, which executed a controlled SQL statement. The statement wrote a harmless proof file outside the intended directory. From there, I verified command execution with a single identity command and stopped.</li>
+                  <li><strong>Reported with a fix, not just a finding.</strong> The advisory included the root cause, the minimal reproduction, the affected trust boundary, and a proposed allowlist architecture. The vendor confirmed the issue and shipped a patch.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <pre class="case-code"><code><span class="c">&lt;!-- Structural sketch only; class names and payload removed --&gt;</span>
+&lt;map&gt;
+  &lt;entry&gt;
+    &lt;string&gt;session&lt;/string&gt;
+    &lt;vendor-object&gt;
+      &lt;embedded-datasource&gt;...&lt;/embedded-datasource&gt;
+    &lt;/vendor-object&gt;
+  &lt;/entry&gt;
+&lt;/map&gt;
+
+<span class="r">→ object construction reached a database initialization sink</span></code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>How we fixed it</h3>
+                <ol class="case-steps">
+                  <li><strong>Denied by default in the deserializer.</strong> The patch enables the security framework, denies all types, and explicitly allows only the small set of DTOs used by agent reports.</li>
+                  <li><strong>Required agent identity.</strong> Agent registration now uses a per-agent credential and mutual TLS; error reports are accepted only from an authenticated, enrolled agent session.</li>
+                  <li><strong>Made the web root read-only.</strong> The deployment runs the application with a read-only root filesystem and no write access to the web application directory, breaking the file-drop step even if another gadget appears.</li>
+                  <li><strong>Reduced the gadget surface.</strong> The embedded database component was removed from the agent process, and dependency review now includes deserialization gadgets.</li>
+                  <li><strong>Added monitoring.</strong> The product emits high-severity alerts for unexpected file creation in the web root and for deserialization errors involving unapproved types.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>After the patch, the original object graph was rejected before construction. A new agent could no longer register without credentials. The read-only filesystem blocked the proof write, and the vendor&rsquo;s regression test confirmed that legitimate agent reports still worked.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>Pre-auth</strong><span>execution path closed</span></div>
+                  <div class="outcome"><strong>9.8</strong><span>researcher CVSS assessment</span></div>
+                  <div class="outcome"><strong>1</strong><span>command used as proof</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>The lesson:</strong> deserialization bugs are rarely about the parser. They are about every class on the classpath that can do something interesting when constructed. An allowlist is not a nice-to-have; it is the boundary.</p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">Deserialization</span><span class="tag">Java</span><span class="tag">CI/CD</span><span class="tag">Vendor advisory</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- 08 -->
+          <details class="case" id="cms-upload-rce" data-cases="research web">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">08</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Research</span>
+                    <span class="severity severity--critical">Critical</span>
+                    <span class="chip">CMS</span>
+                  </div>
+                  <h2>The extension filter that wasn&rsquo;t</h2>
+                  <p>A CMS archive upload relied on a case-sensitive blocklist. A mixed-case filename plus an execution-handler override turned a media upload into remote code execution.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">File upload</span>
+                    <span class="tag">Canonicalization</span>
+                    <span class="tag">RCE</span>
+                    <span class="tag">Secure design</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Engagement</dt><dd>Vulnerability research</dd></div>
+                <div><dt>Surface</dt><dd>CMS media + archive import</dd></div>
+                <div><dt>Window</dt><dd>16 research days</dd></div>
+                <div><dt>Disclosure</dt><dd>Vendor coordinated</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>The target was a page-builder CMS with a media library and an archive import feature used to migrate themes and assets. The upload path appeared to block executable extensions, and the application had a reputation for being security-conscious. The question was whether the filter was canonicalizing input before it made a decision.</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Reviewed the upload contract.</strong> The client accepted ZIP archives, extracted them server-side, and preserved directory structure. The extension check compared against a lowercase blocklist.</li>
+                  <li><strong>Tested case and encoding variants.</strong> A file whose extension differed only by case passed the blocklist. On a case-insensitive filesystem or with a handler override, it remained executable.</li>
+                  <li><strong>Tested handler control.</strong> The archive importer also accepted server configuration files. A minimal handler override in an uploaded directory was enough to make a benign image extension execute as code.</li>
+                  <li><strong>Confirmed with a harmless proof.</strong> I wrote a file that returned a unique token when requested through the web server. No reverse shell, no persistence, and no data access were used. The file and directory were removed after evidence capture.</li>
+                  <li><strong>Reported the chain.</strong> The advisory explained that the bug was not merely &ldquo;PHP upload.&rdquo; It was the combination of non-canonical extension checking, archive extraction trust, and execution enabled in a user-writable directory.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <pre class="case-code"><code><span class="c"># Sanitized chain</span>
+1. upload archive containing mixed-case executable extension
+2. extractor preserves name, blocklist compares lowercase only
+3. handler file in upload directory maps image extension to executable
+4. GET /&lt;upload-dir&gt;/&lt;proof&gt;.&lt;ext&gt;  <span class="r">→ 200, proof token returned</span></code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>How we fixed it</h3>
+                <ol class="case-steps">
+                  <li><strong>Canonicalized before validation.</strong> Filenames are Unicode-normalized, lowercased, and stripped of control characters and trailing dots before the allowlist check.</li>
+                  <li><strong>Switched from blocklist to allowlist.</strong> Only a short set of image, document, and archive types is accepted, verified by magic bytes as well as extension.</li>
+                  <li><strong>Stopped trusting archive paths.</strong> Extraction rejects absolute paths, traversal sequences, symlinks, and nested archives beyond a defined depth. Extracted files receive generated names.</li>
+                  <li><strong>Removed execution from the upload tier.</strong> Media is served from object storage or a separate host with script execution disabled. Handler configuration files are rejected and never written to web-accessible paths.</li>
+                  <li><strong>Added virtual patching and tests.</strong> The WAF blocks mixed-case and double-extension patterns immediately, while the product fix and regression tests cover the root cause.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>Mixed-case, double-extension, traversal, and handler-override attempts were rejected. The stored proof file was no longer executable, and the vendor&rsquo;s regression suite covered the canonicalization cases. The client deployed the virtual patch before the vendor update was available.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>3</strong><span>bypass classes closed</span></div>
+                  <div class="outcome"><strong>0</strong><span>data accessed</span></div>
+                  <div class="outcome"><strong>1</strong><span>vendor patch validated</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>The lesson:</strong> security filters must run on the same representation the filesystem will use. If validation sees a different string than execution sees, the filter is decoration.</p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">Canonicalization</span><span class="tag">Upload security</span><span class="tag">PHP</span><span class="tag">Disclosure</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+        </div>
+
+        <section class="archive-block" aria-labelledby="archive-title">
+          <div class="section-head">
+            <div>
+              <p class="eyebrow section-kicker">Engagement archive</p>
+              <h2 class="section-title" id="archive-title">A wider view of<br>the <em>practice.</em></h2>
+            </div>
+            <p class="section-lead">
+              Not every engagement becomes a full case study. These additional examples show the
+              breadth of the work — still without client names or identifiers.
+            </p>
+          </div>
+          <table class="archive-table">
+            <thead>
+              <tr>
+                <th scope="col">Sector</th>
+                <th scope="col">Representative issue</th>
+                <th scope="col">What changed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Fintech</td>
+                <td>Object-level authorization gap in transaction receipt retrieval.</td>
+                <td>Ownership checks + signed, expiring URLs.</td>
+              </tr>
+              <tr>
+                <td>Government</td>
+                <td>Low-entropy, reusable password-reset tokens.</td>
+                <td>Single-use tokens, rotation, and rate limits.</td>
+              </tr>
+              <tr>
+                <td>B2B SaaS</td>
+                <td>Mass assignment allowed a standard user to set a privileged role field.</td>
+                <td>Server-side field allowlists and role regression tests.</td>
+              </tr>
+              <tr>
+                <td>Telecom</td>
+                <td>Public UAT environment containing production-like subscriber data.</td>
+                <td>Access removed, data purged, environment isolated.</td>
+              </tr>
+              <tr>
+                <td>Retail</td>
+                <td>GraphQL endpoint exposed privileged mutations without field-level authorization.</td>
+                <td>Per-field authorization, query depth limits, allowlisting.</td>
+              </tr>
+              <tr>
+                <td>Logistics</td>
+                <td>Legacy TLS configuration on a partner-facing gateway.</td>
+                <td>Cipher modernization, certificate rotation, monitoring.</td>
+              </tr>
+              <tr>
+                <td>Identity</td>
+                <td>OTP verification lacked per-identity throttling.</td>
+                <td>Per-account limits, lockouts, anomaly alerts, retest.</td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+
+        <div class="projects-cta">
+          <div>
+            <h2>Need a similar level of scrutiny?</h2>
+            <p>I take on a small number of penetration tests, API reviews, mobile reverse-engineering engagements, and retests. If your system carries real risk, start with a short conversation about scope.</p>
+          </div>
+          <a class="btn btn--primary" href="../index.html#contact">
+            Start a conversation
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="../index.html" aria-label="Okasha Mehmood — home">
+            <span class="brand-mark" aria-hidden="true">OM</span>
+            <span class="brand-text"><strong>Okasha Mehmood</strong><small>Security engineering</small></span>
+          </a>
+          <p>Sanitized case studies from confidential security engagements. Full reports and references are available under NDA.</p>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="../index.html">Home</a>
+          <a href="../index.html#approach">Approach</a>
+          <a href="../index.html#about">About</a>
+          <a href="../blog/">Writing</a>
+          <a href="../index.html#contact">Contact</a>
+          <a href="../assets/Okasha-Mehmood-CV.pdf" download>CV</a>
+          <a href="mailto:ukashamehmet@gmail.com">Email</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> Okasha Mehmood. All rights reserved.</span>
+        <span class="status-line"><span class="status-dot" aria-hidden="true"></span> No trackers. No cookies. No client data.</span>
+        <span>Client identifiers intentionally withheld.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../assets/script.js" defer></script>
+</body>
+</html>

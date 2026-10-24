@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Write findings engineers can actually fix — Okasha Mehmood</title>
+  <meta name="description" content="A report is a handoff, not a scoreboard. A lightweight structure for security findings that make it into the release.">
+  <meta name="author" content="Okasha Mehmood">
+  <meta name="theme-color" content="#f1eee4">
+  <meta name="robots" content="index, follow">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Write findings engineers can actually fix">
+  <meta property="og:description" content="A lightweight structure for security findings that make it into the release.">
+  <meta property="og:image" content="../../assets/og-card.png">
+  <meta property="article:author" content="Okasha Mehmood">
+  <meta property="article:published_time" content="2026-05-21">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Write findings engineers can actually fix">
+  <meta name="twitter:description" content="A report is a handoff, not a scoreboard.">
+  <meta name="twitter:image" content="../../assets/og-card.png">
+
+  <link rel="icon" href="../../assets/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="../../assets/favicon.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="../../assets/apple-touch-icon.png">
+  <link rel="manifest" href="../../assets/site.webmanifest">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../../assets/style.css">
+  <script>document.documentElement.classList.add('js');</script>
+</head>
+<body class="page-article">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <div class="scroll-progress" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="../../index.html" aria-label="Okasha Mehmood — home">
+        <span class="brand-mark" aria-hidden="true">OM</span>
+        <span class="brand-text"><strong>Okasha Mehmood</strong><small>Security engineering</small></span>
+      </a>
+      <nav class="site-nav" id="site-nav" aria-label="Primary">
+        <a href="../../projects/">Work</a>
+        <a href="../../index.html#approach">Approach</a>
+        <a href="../../index.html#about">About</a>
+        <a href="../" aria-current="page">Writing</a>
+        <a class="nav-cta" href="../../index.html#contact">
+          Let&rsquo;s talk
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+        </a>
+      </nav>
+      <button class="menu-toggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="site-nav">
+        <svg class="icon-menu" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+        <svg class="icon-close" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <main id="main" class="article-main">
+    <div class="container container--wide">
+      <div class="article-shell">
+        <aside class="article-aside" aria-label="Article details">
+          <a class="text-link" href="../">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M19 12H5M11 18l-6-6 6-6"/></svg>
+            All field notes
+          </a>
+          <dl>
+            <div><dt>Published</dt><dd>21 May 2026</dd></div>
+            <div><dt>Reading time</dt><dd>6 minutes</dd></div>
+            <div><dt>Topic</dt><dd>Security craft</dd></div>
+            <div><dt>Level</dt><dd>All levels</dd></div>
+          </dl>
+          <button class="text-link" type="button" data-copy-article>
+            Copy link
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+          </button>
+        </aside>
+
+        <article>
+          <header class="article-header">
+            <p class="eyebrow">Security craft / Reporting</p>
+            <h1>Write findings engineers can actually fix</h1>
+            <p class="article-dek">
+              A penetration test does not reduce risk by producing a document. It reduces risk when
+              someone with commit access understands the finding, agrees on the fix, and ships it.
+              The report exists to make that happen.
+            </p>
+            <div class="article-byline">
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="8" r="3.5"/><path d="M4.5 21a7.5 7.5 0 0 1 15 0"/></svg>
+                Okasha Mehmood
+              </span>
+              <span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                6 min read
+              </span>
+              <span>Sanitized · no client identifiers</span>
+            </div>
+          </header>
+
+          <div class="prose">
+            <p>
+              I have read a lot of security reports. The weak ones share a shape: a dramatic title, a
+              screenshot, a CVSS score, and a recommendation to &ldquo;validate input&rdquo; or
+              &ldquo;implement proper security.&rdquo; The finding may be real, but the engineer receiving
+              it has to reverse-engineer the report before they can write a patch.
+            </p>
+            <p>
+              A useful finding answers five questions quickly: what is wrong, where, why it matters,
+              what exactly to change, and how we will know it is fixed. Everything else is supporting
+              material.
+            </p>
+
+            <h2>1. Make the title a fact, not a mood</h2>
+            <p>
+              &ldquo;Critical API vulnerability&rdquo; is not a title. It tells the reader nothing they
+              can route to a team. A better title names the object and the failure:
+            </p>
+            <blockquote>
+              <p>Cross-tenant read access on the case-detail endpoint due to missing organization scope</p>
+            </blockquote>
+            <p>
+              The title should survive being pasted into a ticket with no other context. If it needs the
+              executive summary to make sense, it is not finished.
+            </p>
+
+            <h2>2. Put impact before methodology</h2>
+            <p>
+              Engineers are busy. Executives are busier. Start with the sentence that explains the
+              consequence: <em>&ldquo;An authenticated user from one organization can read another
+              organization&rsquo;s case records by changing the object identifier.&rdquo;</em> Then add
+              the conditions: authentication required, role required, data exposed, actions possible.
+            </p>
+            <p>
+              Methodology belongs after impact. The reader should know whether they need to keep reading
+              before they encounter the request dump.
+            </p>
+
+            <h2>3. Give the smallest reproducible proof</h2>
+            <p>
+              A finding should include the minimum sequence that demonstrates the issue: the request,
+              the relevant state, and the observed result. Remove unrelated headers, tokens, cookies,
+              and client data. Use placeholders consistently.
+            </p>
+            <pre><code># Minimal proof — values sanitized
+1. Sign in as Tenant A.
+2. Request /api/&lt;resource&gt;/&lt;tenant-b-object&gt;.
+3. Observe HTTP 200 with Tenant B's record.
+
+Expected: 403 or 404.</code></pre>
+            <p>
+              Do not paste a 400-line proxy history. Link to a redacted evidence file if more detail is
+              needed. The report should be readable; the appendix can be exhaustive.
+            </p>
+
+            <h2>4. Separate the symptom from the root cause</h2>
+            <p>
+              &ldquo;The endpoint returns another tenant&rsquo;s record&rdquo; is the symptom. The root
+              cause might be a global queryset, a missing object permission, a serializer that fetches
+              related objects without scoping, or a background job that bypasses the request layer.
+            </p>
+            <p>
+              If the root cause is not confirmed, say so. &ldquo;The likely cause is a global lookup; the
+              exact call path should be confirmed during remediation&rdquo; is more honest than inventing
+              certainty. Engineers will trust the report more when it distinguishes observation from
+              inference.
+            </p>
+
+            <div class="article-callout">
+              <strong>Useful distinction</strong>
+              <p>Observation: what the response showed. Inference: why the code probably behaves that way. Recommendation: what to change. Do not blur the three.</p>
+            </div>
+
+            <h2>5. Recommend a change, not a virtue</h2>
+            <p>
+              &ldquo;Sanitize input&rdquo; is not actionable. &ldquo;Replace the extension blocklist with a
+              canonicalized allowlist, verify magic bytes, and store uploads outside the web root&rdquo; is.
+              The recommendation should identify the control, the location, and the acceptance criterion.
+            </p>
+            <ul>
+              <li><strong>Control:</strong> what mechanism should exist.</li>
+              <li><strong>Location:</strong> which component or layer should own it.</li>
+              <li><strong>Acceptance:</strong> what a retest will observe when it is correct.</li>
+            </ul>
+            <p>
+              Where possible, include a short code sketch. Keep it illustrative, not a full patch. The
+              engineering team owns the implementation; the report owns the security requirement.
+            </p>
+
+            <h2>6. Make severity explain itself</h2>
+            <p>
+              CVSS is useful for consistency, not for communication. A score without a rationale is
+              noise. Explain the inputs: what access is needed, what data or capability is reached, what
+              user interaction is required, and what compensating controls exist.
+            </p>
+            <p>
+              If a finding is high impact but difficult to exploit, say both. If it is easy but limited,
+              say that too. The goal is a defensible priority, not a dramatic number.
+            </p>
+
+            <h2>7. Close the loop with a retest</h2>
+            <p>
+              The report should define what fixed means before the fix is written. That turns the retest
+              into a verification step rather than a negotiation. For the tenant example, fixed means:
+              the original request returns 403/404, the collection endpoint returns only own-tenant
+              rows, the write path rejects the foreign object, and the regression test runs in CI.
+            </p>
+            <p>
+              A closure memo is short: what was tested, what changed, what passed, what remains. It
+              gives the client evidence for auditors and gives the engineering team a clean end state.
+            </p>
+
+            <h2>A compact finding template</h2>
+            <pre><code>Title: [Object] + [failure] + [condition]
+Impact: one sentence, business language
+Affected: component, endpoint, role, environment
+Evidence: minimal reproducible sequence
+Root cause: confirmed / likely, with code reference
+Fix: control + location + acceptance criteria
+Severity: rating + rationale
+Retest: exact checks that must pass
+References: standards, CWE, related findings</code></pre>
+            <p>
+              This is not a template problem. It is a respect problem. The report is written for the
+              person who has to change the system, not for the person who wants to look thorough. The
+              best finding is the one that gets fixed quietly, correctly, and without a follow-up
+              meeting to explain what it meant.
+            </p>
+          </div>
+
+          <footer class="article-end">
+            <p>
+              <strong>Related case study:</strong> <a href="../../projects/">the full case-study collection</a> —
+              each write-up follows the same structure: context, discovery, evidence, repair, and
+              verification.
+            </p>
+            <div class="article-end-actions">
+              <a class="btn btn--dark" href="../../projects/">Browse the case studies
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+              </a>
+              <button class="btn btn--ghost" type="button" data-copy-article style="color: var(--paper-ink); border-color: var(--paper-line);">
+                Copy article link
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+              </button>
+            </div>
+          </footer>
+
+          <a class="article-next" href="tenant-boundaries.html">
+            <span>
+              <span>Start again</span>
+              <strong>The tenant boundary is a query, not a checkbox</strong>
+            </span>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+          </a>
+        </article>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="../../index.html" aria-label="Okasha Mehmood — home">
+            <span class="brand-mark" aria-hidden="true">OM</span>
+            <span class="brand-text"><strong>Okasha Mehmood</strong><small>Security engineering</small></span>
+          </a>
+          <p>Field notes on application security, network exposure, mobile reversing, and the craft of remediation.</p>
+        </div>
+        <nav class="footer-nav" aria-label="Footer">
+          <a href="../../index.html">Home</a>
+          <a href="../../projects/">Case studies</a>
+          <a href="../">Writing</a>
+          <a href="../../index.html#about">About</a>
+          <a href="../../index.html#contact">Contact</a>
+          <a href="../../assets/Okasha-Mehmood-CV.pdf" download>CV</a>
+          <a href="mailto:ukashamehmet@gmail.com">Email</a>
+        </nav>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-year>2026</span> Okasha Mehmood. All rights reserved.</span>
+        <span class="status-line"><span class="status-dot" aria-hidden="true"></span> No trackers. No cookies. No client data.</span>
+        <span>Sanitized for public reading.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="../../assets/script.js" defer></script>
+</body>
+</html>
