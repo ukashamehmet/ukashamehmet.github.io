@@ -1,13 +1,13 @@
 # Okasha Mehmood — Security Portfolio
 
-A static, dependency-free portfolio for a penetration tester and reverse engineer. Built for GitHub Pages, with a sanitized case-study collection, long-form field notes, a downloadable CV, and a local-only content studio.
+A static, dependency-free editorial portfolio for a penetration tester and reverse engineer. Built for GitHub Pages, with a sanitized case-study collection, long-form field notes, a downloadable CV, and a local-only content studio.
 
 **Live site:** https://ukashamehmet.github.io/
 
 **Live sections**
 
 - `/` — positioning, selected work, approach, capabilities, experience, writing, contact
-- `/projects/` — eight detailed, sanitized case studies
+- `/projects/` — nine detailed, sanitized case studies
 - `/blog/` — four field notes plus full article pages
 - `/resume.html` — print-ready CV (PDF in `assets/Okasha-Mehmood-CV.pdf`)
 - `/admin/` — local authoring console (not linked publicly, `noindex`)
@@ -61,7 +61,14 @@ All internal links are relative, so they work in both layouts. `.nojekyll` is in
 ├── resume.html
 ├── assets/
 │   ├── style.css
+│   ├── editorial.css
 │   ├── script.js
+│   ├── work-saas.jpg
+│   ├── work-network.jpg
+│   ├── work-mobile.jpg
+│   ├── work-research.jpg
+│   ├── about-desk.jpg
+│   ├── blog-arch.jpg
 │   ├── favicon.svg
 │   ├── favicon.png
 │   ├── apple-touch-icon.png
@@ -104,7 +111,7 @@ Files: `index.html`, `projects/index.html`, `blog/index.html`, the article pages
 
 ### Case studies
 
-All eight write-ups live in `projects/index.html`, inside `<details class="case">` blocks. Each case has:
+All nine write-ups live in `projects/index.html`, inside `<details class="case">` blocks. Each case has:
 
 - a summary card with category, severity, and tags;
 - `data-cases` values used by the filter bar (`web api network mobile research`);
@@ -177,6 +184,10 @@ Before publishing:
 - Animations respect `prefers-reduced-motion`.
 - `resume.html` and the PDF are print-optimized; the PDF is a snapshot and must be regenerated after CV edits.
 - The public writing is educational and sanitized. It does not include working exploit code.
+
+## Photography
+
+Editorial photography is sourced from Unsplash under the Unsplash License and used as illustrative imagery only. The images do not depict clients, engagements, or confidential environments.
 
 ## License
 

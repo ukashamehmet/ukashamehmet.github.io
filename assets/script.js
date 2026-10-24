@@ -381,6 +381,17 @@
           tags: "upload, RCE, canonicalization",
           confidential: true,
         },
+        {
+          id: "mobile-oauth-recovery",
+          title: "Obfuscation is not encryption",
+          slug: "projects/#mobile-oauth-recovery",
+          category: "Mobile / RE",
+          severity: "High",
+          status: "Published",
+          summary: "Recovering embedded OAuth 1.0a consumer credentials from an Android client through static analysis.",
+          tags: "apktool / Smali, OAuth 1.0a, HMAC-SHA1, static analysis",
+          confidential: true,
+        },
       ],
       posts: [
         {

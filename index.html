@@ -6,7 +6,7 @@
   <title>Okasha Mehmood — Penetration Tester &amp; Security Engineer</title>
   <meta name="description" content="Penetration testing, API security, mobile reverse engineering, and external attack surface work. 50+ confidential engagements across government, telecom, fintech, and SaaS.">
   <meta name="author" content="Okasha Mehmood">
-  <meta name="theme-color" content="#06100c">
+  <meta name="theme-color" content="#f3f1eb">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://ukashamehmet.github.io/">
 
@@ -31,8 +31,9 @@
   <link rel="manifest" href="assets/site.webmanifest">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="assets/style.css">
+  <link rel="stylesheet" href="assets/editorial.css">
   <script>document.documentElement.classList.add('js');</script>
 
   <script type="application/ld+json">
@@ -187,6 +188,196 @@
       </div>
     </section>
 
+    <!-- Selected work -->
+    <section class="section work-section" id="work">
+      <div class="container">
+        <div class="section-head">
+          <div>
+            <p class="eyebrow section-kicker">Selected work / 01</p>
+            <h2 class="section-title">The work is<br>the <em>argument.</em></h2>
+          </div>
+          <p class="section-lead">
+            Four sanitized case studies from confidential engagements. Each one shows the signal,
+            the proof, and the fix — without naming the client.
+          </p>
+        </div>
+
+        <div class="work-grid">
+          <article class="work-card" data-reveal>
+            <a class="work-image" href="projects/#saas-bola" aria-label="Read the multi-tenant SaaS case study">
+              <img src="assets/work-saas.jpg" alt="Modern glass architecture" width="1400" height="1050" loading="lazy">
+              <span class="work-index">01 / WEB &amp; API</span>
+              <span class="work-badges">
+                <span class="chip chip--critical">Critical</span>
+                <span class="chip">SaaS</span>
+              </span>
+              <span class="work-open">
+                View case
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+              </span>
+              <h3>One query, every tenant</h3>
+            </a>
+            <div class="work-content">
+              <p>
+                A multi-tenant platform checked that a user was logged in — but not which organization
+                the record belonged to. We proved cross-tenant access, then moved enforcement into the
+                data layer and retested every object route.
+              </p>
+              <div class="work-card-meta">
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  Tenant isolation restored
+                </span>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  Retested across 40+ routes
+                </span>
+              </div>
+              <div class="work-card-foot">
+                <div class="work-tags">
+                  <span class="tag">BOLA / IDOR</span>
+                  <span class="tag">Django REST</span>
+                  <span class="tag">AuthZ</span>
+                </div>
+                <a class="work-arrow" href="projects/#saas-bola" aria-label="Read the multi-tenant SaaS case study">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article class="work-card" data-reveal data-reveal-delay="1">
+            <a class="work-image" href="projects/#logistics-perimeter" aria-label="Read the external perimeter case study">
+              <img src="assets/work-network.jpg" alt="Container port seen from above" width="1400" height="1050" loading="lazy">
+              <span class="work-index">02 / NETWORK</span>
+              <span class="work-badges">
+                <span class="chip chip--high">High</span>
+                <span class="chip">Logistics</span>
+              </span>
+              <span class="work-open">
+                View case
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+              </span>
+              <h3>The WAF was never the wall</h3>
+            </a>
+            <div class="work-content">
+              <p>
+                The edge was doing its job. The origin was not behind it. Public records exposed the
+                hosting range, direct-to-origin requests bypassed the WAF, and management interfaces
+                were sitting on the public internet.
+              </p>
+              <div class="work-card-meta">
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  78% external surface reduction
+                </span>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  Origin locked to edge
+                </span>
+              </div>
+              <div class="work-card-foot">
+                <div class="work-tags">
+                  <span class="tag">ASM</span>
+                  <span class="tag">WAF bypass</span>
+                  <span class="tag">ZTNA</span>
+                </div>
+                <a class="work-arrow" href="projects/#logistics-perimeter" aria-label="Read the external perimeter case study">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article class="work-card" data-reveal>
+            <a class="work-image" href="projects/#android-rat" aria-label="Read the Android malware case study">
+              <img src="assets/work-mobile.jpg" alt="Macro detail of a circuit board" width="1400" height="1050" loading="lazy">
+              <span class="work-index">03 / MOBILE RE</span>
+              <span class="work-badges">
+                <span class="chip chip--critical">Critical</span>
+                <span class="chip">Android</span>
+              </span>
+              <span class="work-open">
+                View case
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+              </span>
+              <h3>The app that became the network</h3>
+            </a>
+            <div class="work-content">
+              <p>
+                A fake traffic-notice app asked for VPN permission, then routed every outbound
+                connection through a local TUN interface. We reconstructed the dropper, the route,
+                and the secondary payload loader — and built detection content for the fleet.
+              </p>
+              <div class="work-card-meta">
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  Delivery chain mapped
+                </span>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  YARA + Sigma delivered
+                </span>
+              </div>
+              <div class="work-card-foot">
+                <div class="work-tags">
+                  <span class="tag">VpnService</span>
+                  <span class="tag">Frida</span>
+                  <span class="tag">Malware</span>
+                </div>
+                <a class="work-arrow" href="projects/#android-rat" aria-label="Read the Android malware case study">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+
+          <article class="work-card" data-reveal data-reveal-delay="1">
+            <a class="work-image" href="projects/#cicd-rce" aria-label="Read the CI/CD deserialization case study">
+              <img src="assets/work-research.jpg" alt="Server racks and network cabling" width="1400" height="1050" loading="lazy">
+              <span class="work-index">04 / RESEARCH</span>
+              <span class="work-badges">
+                <span class="chip chip--critical">Critical</span>
+                <span class="chip">CI/CD</span>
+              </span>
+              <span class="work-open">
+                View case
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+              </span>
+              <h3>Trust, but deserialize</h3>
+            </a>
+            <div class="work-content">
+              <p>
+                A build-agent endpoint accepted XML from a synthetic worker and passed it into an
+                unpinned deserializer. We built the smallest proof that reached command execution,
+                stopped there, and worked with the vendor on the allowlist.
+              </p>
+              <div class="work-card-meta">
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  Pre-auth path closed
+                </span>
+                <span>
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
+                  Fix validated
+                </span>
+              </div>
+              <div class="work-card-foot">
+                <div class="work-tags">
+                  <span class="tag">XStream</span>
+                  <span class="tag">Deserialization</span>
+                  <span class="tag">CWE-502</span>
+                </div>
+                <a class="work-arrow" href="projects/#cicd-rce" aria-label="Read the CI/CD deserialization case study">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
     <!-- Sector strip -->
     <div class="sector-strip" aria-label="Sectors worked in">
       <div class="container sector-inner">
@@ -210,168 +401,6 @@
         <div class="stat"><strong>3<span>+</span></strong><p>Years in offensive security</p></div>
         <div class="stat"><strong>7</strong><p>Sectors tested</p></div>
         <div class="stat"><strong>0</strong><p>Client records retained</p></div>
-      </div>
-    </section>
-
-    <!-- Selected work -->
-    <section class="section work-section" id="work">
-      <div class="container">
-        <div class="section-head">
-          <div>
-            <p class="eyebrow section-kicker">Selected work / 01</p>
-            <h2 class="section-title">The work is<br>the <em>argument.</em></h2>
-          </div>
-          <p class="section-lead">
-            Four sanitized case studies from confidential engagements. Each one shows the signal,
-            the proof, and the fix — without naming the client.
-          </p>
-        </div>
-
-        <div class="work-grid">
-          <article class="work-card" data-reveal>
-            <div class="work-card-top">
-              <span class="work-index">01 / WEB &amp; API</span>
-              <div class="work-badges">
-                <span class="chip chip--critical">Critical</span>
-                <span class="chip">SaaS</span>
-              </div>
-            </div>
-            <h3><a href="projects/#saas-bola">One query, every tenant</a></h3>
-            <p>
-              A multi-tenant platform checked that a user was logged in — but not which organization
-              the record belonged to. We proved cross-tenant access, then moved enforcement into the
-              data layer and retested every object route.
-            </p>
-            <div class="work-card-meta">
-              <span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                Tenant isolation restored
-              </span>
-              <span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                Retested across 40+ routes
-              </span>
-            </div>
-            <div class="work-card-foot">
-              <div class="work-tags">
-                <span class="tag">BOLA / IDOR</span>
-                <span class="tag">Django REST</span>
-                <span class="tag">AuthZ</span>
-              </div>
-              <a class="work-arrow" href="projects/#saas-bola" aria-label="Read the multi-tenant SaaS case study">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
-              </a>
-            </div>
-          </article>
-
-          <article class="work-card" data-reveal data-reveal-delay="1">
-            <div class="work-card-top">
-              <span class="work-index">02 / NETWORK</span>
-              <div class="work-badges">
-                <span class="chip chip--high">High</span>
-                <span class="chip">Logistics</span>
-              </div>
-            </div>
-            <h3><a href="projects/#logistics-perimeter">The WAF was never the wall</a></h3>
-            <p>
-              The edge was doing its job. The origin was not behind it. Public records exposed the
-              hosting range, direct-to-origin requests bypassed the WAF, and management interfaces
-              were sitting on the public internet.
-            </p>
-            <div class="work-card-meta">
-              <span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                78% external surface reduction
-              </span>
-              <span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                Origin locked to edge
-              </span>
-            </div>
-            <div class="work-card-foot">
-              <div class="work-tags">
-                <span class="tag">ASM</span>
-                <span class="tag">WAF bypass</span>
-                <span class="tag">ZTNA</span>
-              </div>
-              <a class="work-arrow" href="projects/#logistics-perimeter" aria-label="Read the external perimeter case study">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
-              </a>
-            </div>
-          </article>
-
-          <article class="work-card" data-reveal>
-            <div class="work-card-top">
-              <span class="work-index">03 / MOBILE RE</span>
-              <div class="work-badges">
-                <span class="chip chip--critical">Critical</span>
-                <span class="chip">Android</span>
-              </div>
-            </div>
-            <h3><a href="projects/#android-rat">The app that became the network</a></h3>
-            <p>
-              A fake traffic-notice app asked for VPN permission, then routed every outbound
-              connection through a local TUN interface. We reconstructed the dropper, the route,
-              and the secondary payload loader — and built detection content for the fleet.
-            </p>
-            <div class="work-card-meta">
-              <span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                Delivery chain mapped
-              </span>
-              <span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                YARA + Sigma delivered
-              </span>
-            </div>
-            <div class="work-card-foot">
-              <div class="work-tags">
-                <span class="tag">VpnService</span>
-                <span class="tag">Frida</span>
-                <span class="tag">Malware</span>
-              </div>
-              <a class="work-arrow" href="projects/#android-rat" aria-label="Read the Android malware case study">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
-              </a>
-            </div>
-          </article>
-
-          <article class="work-card" data-reveal data-reveal-delay="1">
-            <div class="work-card-top">
-              <span class="work-index">04 / RESEARCH</span>
-              <div class="work-badges">
-                <span class="chip chip--critical">Critical</span>
-                <span class="chip">CI/CD</span>
-              </div>
-            </div>
-            <h3><a href="projects/#cicd-rce">Trust, but deserialize</a></h3>
-            <p>
-              A build-agent endpoint accepted XML from a synthetic worker and passed it into an
-              unpinned deserializer. We built the smallest proof that reached command execution,
-              stopped there, and worked with the vendor on the allowlist.
-            </p>
-            <div class="work-card-meta">
-              <span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                Pre-auth path closed
-              </span>
-              <span>
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m5 12 4 4L19 6"/></svg>
-                Fix validated
-              </span>
-            </div>
-            <div class="work-card-foot">
-              <div class="work-tags">
-                <span class="tag">XStream</span>
-                <span class="tag">Deserialization</span>
-                <span class="tag">CWE-502</span>
-              </div>
-              <a class="work-arrow" href="projects/#cicd-rce" aria-label="Read the CI/CD deserialization case study">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M5 19 19 5M9 5h10v10"/></svg>
-              </a>
-            </div>
-          </article>
-        </div>
       </div>
     </section>
 
