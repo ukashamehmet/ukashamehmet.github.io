@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Security Case Studies — Okasha Mehmood</title>
-  <meta name="description" content="Eight sanitized penetration testing, API, mobile reversing, and vulnerability research case studies. See how each issue was found, fixed, and verified.">
+  <meta name="description" content="Nine sanitized penetration testing, API, mobile reversing, and vulnerability research case studies. See how each issue was found, fixed, and verified.">
   <meta name="author" content="Okasha Mehmood">
   <meta name="theme-color" content="#06100c">
   <meta name="robots" content="index, follow">
@@ -14,14 +14,14 @@
   <meta property="og:site_name" content="Okasha Mehmood">
   <meta property="og:url" content="https://ukashamehmet.github.io/projects/">
   <meta property="og:title" content="Security Case Studies — Okasha Mehmood">
-  <meta property="og:description" content="Eight sanitized engagements. Context, discovery, proof, remediation, and verification — with client identifiers removed.">
+  <meta property="og:description" content="Nine sanitized engagements. Context, discovery, proof, remediation, and verification — with client identifiers removed.">
   <meta property="og:image" content="https://ukashamehmet.github.io/assets/og-card.png">
   <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Security Case Studies — Okasha Mehmood">
-  <meta name="twitter:description" content="Eight sanitized security engagements, told through the work.">
+  <meta name="twitter:description" content="Nine sanitized security engagements, told through the work.">
   <meta name="twitter:image" content="https://ukashamehmet.github.io/assets/og-card.png">
 
   <link rel="icon" href="../assets/favicon.svg" type="image/svg+xml">
@@ -72,14 +72,14 @@
         <h1>Proof, with the names <em>removed.</em></h1>
         <div class="page-hero-bottom">
           <p class="page-hero-lead">
-            Eight sanitized case studies from confidential engagements. Each one covers the context,
+            Nine sanitized case studies from confidential engagements. Each one covers the context,
             how the issue was found, the smallest proof, the repair, and the retest. Client names,
             domains, IPs, payloads, and data are intentionally absent.
           </p>
           <div class="page-hero-meta" aria-label="Collection details">
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M7 3h10v18H7z"/><path d="M10 8h4M10 12h4M10 16h3"/></svg>
-              8 case studies
+              9 case studies
             </span>
             <span>
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="4" y="10" width="16" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
@@ -117,7 +117,7 @@
             <button class="filter-btn" type="button" data-filter="mobile" aria-pressed="false">Mobile</button>
             <button class="filter-btn" type="button" data-filter="research" aria-pressed="false">Research</button>
           </div>
-          <span class="filter-count" data-filter-count aria-live="polite"><strong>8</strong> of 8 shown</span>
+          <span class="filter-count" data-filter-count aria-live="polite"><strong>9</strong> of 9 shown</span>
           <button class="filter-btn" type="button" data-expand-all>Expand all</button>
         </div>
 
@@ -912,6 +912,113 @@ download(&lt;encrypted-dex&gt;) → decrypt(&lt;bundled-key&gt;) → DexClassLoa
                 <div class="case-footer">
                   <div class="work-tags">
                     <span class="tag">Canonicalization</span><span class="tag">Upload security</span><span class="tag">PHP</span><span class="tag">Disclosure</span>
+                  </div>
+                  <button class="text-link" type="button" data-copy-link>
+                    Copy case link
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7 0l2-2a5 5 0 0 0-7-7l-1 1"/><path d="M14 11a5 5 0 0 0-7 0l-2 2a5 5 0 0 0 7 7l1-1"/></svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </details>
+
+          <!-- 09 -->
+          <details class="case" id="mobile-oauth-recovery" data-cases="mobile research">
+            <summary>
+              <div class="case-summary">
+                <span class="case-no">09</span>
+                <div>
+                  <div class="case-heading">
+                    <span class="chip">Mobile / RE</span>
+                    <span class="severity severity--high">High</span>
+                    <span class="chip">Twitter / X</span>
+                  </div>
+                  <h2>Obfuscation is not encryption</h2>
+                  <p>The official Twitter (X) Android app stored its OAuth 1.0a consumer credentials behind a reversible arithmetic transform. Decompiling the client and undoing one byte operation recovered the signing key.</p>
+                  <div class="case-summary-meta">
+                    <span class="tag">Android reversing</span>
+                    <span class="tag">OAuth 1.0a</span>
+                    <span class="tag">Credential exposure</span>
+                    <span class="tag">Coordinated disclosure</span>
+                  </div>
+                </div>
+                <span class="case-toggle" aria-hidden="true">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 5v14M5 12h14"/></svg>
+                </span>
+              </div>
+            </summary>
+            <div class="case-body">
+              <dl class="case-meta-grid">
+                <div><dt>Program</dt><dd>Twitter (X) — HackerOne</dd></div>
+                <div><dt>Surface</dt><dd>com.twitter.android (APK)</dd></div>
+                <div><dt>Window</dt><dd>Independent research</dd></div>
+                <div><dt>Disclosure</dt><dd>HackerOne · Apr 2026</dd></div>
+              </dl>
+
+              <div class="case-section">
+                <h3>Context</h3>
+                <p>The target was <code>com.twitter.android</code>, the official Twitter (X) Android app, tested under Twitter's public HackerOne bug bounty program. Native mobile apps for API-driven platforms often embed a consumer key and secret so the client can sign its own requests before a user ever logs in. Those values are not meant to be extractable from the installed package, so the app's build pipeline ran them through a byte-level transform rather than storing them as plain strings.</p>
+                <p>The question driving the research was simple: does that transform function as real protection, or only as a speed bump for anyone willing to read the decompiled code?</p>
+              </div>
+
+              <div class="case-section">
+                <h3>How I found it</h3>
+                <ol class="case-steps">
+                  <li><strong>Decompiled the APK.</strong> Running apktool against <code>com.twitter.android</code> produced readable Smali across dozens of packages. A small, oddly named class (<code>ttu.smali</code>) initialized two static string fields from byte arrays rather than string literals — an immediate signal that something was being deliberately obscured.</li>
+                  <li><strong>Read the transform.</strong> The class&rsquo;s static initializer looped over each byte array and applied <code>rsub-int/lit8</code> with a constant, then converted the result to a character. That is a single fixed subtraction per byte — a classic &ldquo;hide it from <code>strings</code>&rdquo; trick rather than real cryptography, and trivial to reverse by hand or in a short script.</li>
+                  <li><strong>Traced where the decoded values went.</strong> The two decoded strings were passed into a small credential-container class (<code>fhj.smali</code>), which was in turn consumed by the app&rsquo;s OAuth 1.0a signing engine (<code>khj.smali</code>) and by a secondary OAuth2 basic-auth path (<code>aqc.smali</code>). The signing engine referenced the constants by name as <code>oauth_consumer_key</code> and the paired secret used in HMAC-SHA1 signing.</li>
+                  <li><strong>Confirmed the values were live.</strong> I decoded the byte arrays offline, then reimplemented the client&rsquo;s OAuth 1.0a request-signing logic in a standalone script: build the signature base string, HMAC-SHA1 it with the recovered consumer secret, and attach the resulting <code>Authorization</code> header to a request built with the same client headers the official app sends.</li>
+                  <li><strong>Proved impersonation, not data access.</strong> A request signed this way was accepted as if it came from the official client. I limited the proof to confirming that a correctly signed, unauthenticated-tier request succeeded — I did not use the recovered credentials against authenticated endpoints or pull user data.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>The evidence</h3>
+                <p>Credential values, tokens, and signatures below are illustrative placeholders, not the recovered material.</p>
+                <pre class="case-code"><code><span class="c">// Decompiled static initializer — structure, not values</span>
+sput-object v0, L&lt;obfuscated-class&gt;;->d:Ljava/lang/String;  <span class="c">// consumer key</span>
+sput-object v0, L&lt;obfuscated-class&gt;;->e:Ljava/lang/String;  <span class="c">// consumer secret</span>
+
+<span class="c">// The "obfuscation": one subtraction per byte, in a loop</span>
+rsub-int/lit8 v7, v7, 0x16      <span class="c">// decoded_byte = 0x16 - raw_byte</span>
+int-to-char v7, v7
+
+<span class="c">// Reconstructed OAuth 1.0a header (sanitized)</span>
+Authorization: OAuth realm="&lt;api-origin&gt;",
+  oauth_consumer_key="&lt;recovered-key&gt;",
+  oauth_signature_method="HMAC-SHA1",
+  oauth_nonce="&lt;nonce&gt;", oauth_timestamp="&lt;ts&gt;",
+  oauth_signature="&lt;hmac-sha1-sig&gt;"
+
+<span class="r">→ accepted by the API as a request from the official client</span></code></pre>
+              </div>
+
+              <div class="case-section">
+                <h3>How it was addressed</h3>
+                <p>The report was triaged by HackerOne as a duplicate of an already-known issue, which is itself informative: embedded, lightly-obscured consumer credentials in mobile OAuth 1.0a clients are a recurring class across large API-driven apps, not a one-off oversight. The direction of a durable fix is consistent with how Twitter/X and others in this space have since moved:</p>
+                <ol class="case-steps">
+                  <li><strong>Stop treating a client secret as secret.</strong> Any value shipped inside an installable package should be assumed public. Per-app consumer credentials used only to identify &ldquo;this is the official client&rdquo; carry little security value once that assumption is made.</li>
+                  <li><strong>Move trust decisions server-side.</strong> Rate limits, abuse detection, and app-identity checks were shifted toward signals the client cannot forge by reading its own binary — attested app integrity, device-bound tokens, and behavioral/anomaly detection on the API side.</li>
+                  <li><strong>Reduce what a bare consumer key/secret pair can do.</strong> Unauthenticated, app-only requests were scoped down so that recovering the embedded credential alone no longer provides meaningful API access without an additional, harder-to-forge signal.</li>
+                  <li><strong>Treat obfuscation as a delay, not a boundary.</strong> Where client-side secrecy is still used as one layer, it is paired with controls that assume it will eventually be defeated, rather than being the sole gate in front of API capability.</li>
+                </ol>
+              </div>
+
+              <div class="case-section">
+                <h3>Verification &amp; outcome</h3>
+                <p>The proof-of-concept script reliably produced accepted, correctly signed requests using only values recovered through static analysis of the public APK, with no runtime hooking or device needed. The finding was written up and submitted through the program&rsquo;s standard disclosure process.</p>
+                <div class="outcome-grid">
+                  <div class="outcome"><strong>1</strong><span>byte transform reversed</span></div>
+                  <div class="outcome"><strong>3</strong><span>Smali classes traced end to end</span></div>
+                  <div class="outcome"><strong>0</strong><span>user accounts accessed</span></div>
+                </div>
+                <div class="case-callout">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M12 3 4.5 6v6c0 4.8 3.2 7.6 7.5 9 4.3-1.4 7.5-4.2 7.5-9V6Z"/><path d="m9 12 2 2 4-4"/></svg>
+                  <p><strong>The lesson:</strong> a transform that keeps a value out of <code>strings -a</code> is not a security control. If the decoding logic ships in the same package as the encoded value, an attacker has everything needed to reverse it — the only question is how long the reversing takes.</p>
+                </div>
+                <div class="case-footer">
+                  <div class="work-tags">
+                    <span class="tag">apktool / Smali</span><span class="tag">OAuth 1.0a</span><span class="tag">HMAC-SHA1</span><span class="tag">Static analysis</span>
                   </div>
                   <button class="text-link" type="button" data-copy-link>
                     Copy case link
