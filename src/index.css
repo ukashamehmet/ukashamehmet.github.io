@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body { background: #0B0F19; }
+  :focus-visible { outline: 2px solid #00FF87; outline-offset: 2px; }
+  html.large-text { font-size: 112.5%; }
+  summary { list-style: none; }
+  summary::-webkit-details-marker { display: none; }
+}
+
+.grid-bg {
+  background-image: linear-gradient(#1F2A40 1px, transparent 1px), linear-gradient(90deg, #1F2A40 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse at 50% 0%, #000 30%, transparent 75%);
+  opacity: .35;
+}
+.js .reveal { opacity: 0; transform: translateY(12px); transition: opacity .45s ease, transform .45s ease; }
+.js .reveal.in { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+  .js .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+.redact { background: currentColor; border-radius: 2px; color: inherit; user-select: none; }
+.thin-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
+.thin-scroll::-webkit-scrollbar-thumb { background: #1F2A40; border-radius: 3px; }
+.cv-auto { content-visibility: auto; contain-intrinsic-size: auto 900px; }
+
+/* ---------- Long-form content (case studies + field notes) ---------- */
+.prose-om { color: #93A1B8; line-height: 1.75; font-size: 1rem; }
+.prose-om > * + * { margin-top: 1.1em; }
+.prose-om h2 { color: #E6EDF6; font-size: 1.5rem; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; margin-top: 2.2em; }
+.prose-om h3 { color: #E6EDF6; font-size: 1.15rem; font-weight: 600; margin-top: 1.8em; }
+.prose-om strong { color: #E6EDF6; font-weight: 600; }
+.prose-om em { color: #E6EDF6; }
+.prose-om a { color: #00FF87; text-decoration: underline; text-underline-offset: 3px; }
+.prose-om ul, .prose-om ol { padding-left: 1.25rem; }
+.prose-om ul { list-style: none; padding-left: 0; }
+.prose-om ul > li { position: relative; padding-left: 1.4rem; }
+.prose-om ul > li::before { content: '▸'; position: absolute; left: 0; color: #00FF87; font-family: 'JetBrains Mono', monospace; font-size: .85em; top: .15em; }
+.prose-om ol { list-style: none; counter-reset: step; padding-left: 0; }
+.prose-om ol > li { counter-increment: step; position: relative; padding-left: 2.6rem; }
+.prose-om ol > li::before { content: counter(step, decimal-leading-zero); position: absolute; left: 0; top: .05em; font-family: 'JetBrains Mono', monospace; font-size: .8rem; color: #22D3EE; }
+.prose-om li + li { margin-top: .75em; }
+.prose-om code { font-family: 'JetBrains Mono', monospace; font-size: .85em; color: #E6EDF6; background: #0F1524; border: 1px solid #1F2A40; border-radius: 4px; padding: .1em .35em; }
+.prose-om pre { font-family: 'JetBrains Mono', monospace; font-size: 12.5px; line-height: 1.7; background: #0F1524; border: 1px solid #1F2A40; border-radius: .6rem; padding: 1rem 1.1rem; overflow-x: auto; color: #E6EDF6; white-space: pre; }
+.prose-om pre code { background: none; border: 0; padding: 0; font-size: inherit; }
+.prose-om pre .c { color: #6B7A93; }
+.prose-om pre .r { color: #00FF87; }
+.prose-om pre .y { color: #FBBF24; }
+.prose-om blockquote { border-left: 3px solid #00FF87; background: #131A2B; border-radius: 0 .6rem .6rem 0; padding: 1rem 1.25rem; color: #E6EDF6; font-size: 1.125rem; font-weight: 600; line-height: 1.5; }
+.prose-om table { width: 100%; font-size: .875rem; border-collapse: collapse; display: block; overflow-x: auto; }
+.prose-om th { text-align: left; font-family: 'JetBrains Mono', monospace; font-size: .7rem; text-transform: uppercase; letter-spacing: .05em; color: #6B7A93; font-weight: 500; padding: .65rem .9rem; border-bottom: 1px solid #1F2A40; white-space: nowrap; }
+.prose-om td { padding: .65rem .9rem; border-bottom: 1px solid #1F2A40; vertical-align: top; }
+.prose-om .article-callout { border: 1px solid rgba(0, 255, 135, .3); background: rgba(0, 255, 135, .05); border-radius: .75rem; padding: 1rem 1.25rem; }
+.prose-om .article-callout > strong { display: block; font-family: 'JetBrains Mono', monospace; font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; color: #00FF87; }
+.prose-om .article-callout p { margin-top: .4em; color: #E6EDF6; }
+.prose-sm-om { font-size: .9375rem; }
+.prose-sm-om ol > li, .prose-sm-om ul > li { font-size: .9375rem; }
+
+/* Reading progress bar on articles */
+.read-progress { transform-origin: 0 50%; transform: scaleX(var(--p, 0)); }
+
+/* Print styles for the CV page */
+@media print {
+  .no-print { display: none !important; }
+  body { background: #fff !important; }
+  .cv-sheet { box-shadow: none !important; border: 0 !important; margin: 0 !important; max-width: none !important; }
+}

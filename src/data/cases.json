@@ -1,0 +1,761 @@
+{
+ "cases": [
+  {
+   "id": "saas-bola",
+   "no": "01",
+   "filters": [
+    "web",
+    "api"
+   ],
+   "category": "Web & API",
+   "severity": "Critical",
+   "sector": "SaaS",
+   "title": "One query, every tenant",
+   "summary": "A multi-tenant legal case-management platform authenticated every request but failed to bind objects to the requesting tenant. The result was cross-organization read and write access.",
+   "summaryTags": [
+    "BOLA / IDOR",
+    "Tenant isolation",
+    "Production debug leak",
+    "SOC 2 readiness"
+   ],
+   "meta": [
+    {
+     "label": "Engagement",
+     "value": "Authenticated web + API test"
+    },
+    {
+     "label": "Surface",
+     "value": "SaaS platform, 3 roles"
+    },
+    {
+     "label": "Window",
+     "value": "10 testing days"
+    },
+    {
+     "label": "Disclosure",
+     "value": "Coordinated · 2025"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>The client operates a multi-tenant case-management platform for legal and investigation teams. Each customer organization expects its matters, notes, and identity data to be invisible to every other tenant. A SOC 2 Type II audit was approaching, and the engineering team wanted an independent test of tenant isolation rather than another scanner run.</p>\n<p>I was given two isolated test tenants, one administrative account, and one standard user account. The objective was specific: prove whether the application enforced tenant boundaries at the object level, not just at login.</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Built a two-tenant matrix.</strong> I mapped every role and every object action — read, update, export, comment, assign, delete — then created a test plan that treated each combination as a separate authorization decision.</li>\n<li><strong>Traced the API from the client.</strong> The web application was a single-page app. I reviewed its JavaScript bundles to recover route patterns, then compared them with the API documentation and observed traffic.</li>\n<li><strong>Tested object ownership, not just authentication.</strong> Using Tenant A’s session, I requested an object identifier belonging to Tenant B. The server returned the full record with a <code>200 OK</code> instead of a <code>403</code> or <code>404</code>.</li>\n<li><strong>Confirmed the pattern at the collection layer.</strong> A list endpoint returned records from multiple organizations, and nested staff objects leaked internal usernames and roles. Debug behavior in production exposed route metadata and query traces, which explained the missing tenant filter.</li>\n<li><strong>Tested the write path.</strong> The same object identifier accepted a <code>PATCH</code> from Tenant A, allowing status and priority fields on Tenant B’s record to be changed. I stopped after one synthetic test record and did not export client data.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<p>A sanitized request pattern was enough to demonstrate the boundary failure reproducibly. Names, identifiers, and values are replaced.</p>\n<pre><code><span class=\"c\"># Tenant A session requests Tenant B's object</span>\nGET /api/v1/&lt;resource&gt;/&lt;object-id&gt; HTTP/1.1\nAuthorization: Bearer &lt;tenant-a-session&gt;\n<span class=\"r\">HTTP/1.1 200 OK</span>\n{\n  \"tenant\": \"&lt;tenant-b&gt;\",\n  \"record\": \"&lt;redacted&gt;\",\n  \"staff\": { \"username\": \"&lt;internal-user&gt;\", \"role\": \"&lt;internal-role&gt;\" }\n}</code></pre>"
+    },
+    {
+     "title": "How we fixed it",
+     "html": "<ol>\n<li><strong>Made tenant scope a data-layer default.</strong> A tenant-aware manager scoped every queryset to the authenticated user’s organization. Application code could no longer call an unscoped global model lookup by accident.</li>\n<li><strong>Added object-level permissions.</strong> A deny-by-default permission class checked ownership before serialization or mutation. Foreign objects return <code>404</code> to avoid confirming their existence.</li>\n<li><strong>Used a composite lookup.</strong> Object retrieval now queries by both tenant and object identifier, rather than fetching globally and checking afterwards.</li>\n<li><strong>Removed production debug behavior.</strong> Debug mode was disabled, a custom error handler replaced framework tracebacks, and exposed environment secrets were rotated.</li>\n<li><strong>Reduced the response surface.</strong> List serializers were split from detail serializers; internal staff objects and sensitive fields no longer appear in tenant-facing responses.</li>\n</ol>\n<pre><code><span class=\"c\"># Illustrative fix: scope before retrieval, then authorize</span>\ndef get_queryset(self):\n    return Case.objects.for_tenant(self.request.user.tenant)\ndef get_object(self):\n    return get_object_or_404(\n        self.get_queryset(),\n        object_id=self.kwargs[\"object_id\"],\n    )</code></pre>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>I replayed the original requests and extended the test to every object route in the application. Cross-tenant reads, writes, exports, and nested-object access all failed closed. The engineering team added a two-tenant regression suite to CI so the boundary could not silently regress.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "40+",
+     "label": "object routes retested"
+    },
+    {
+     "value": "100%",
+     "label": "test-tenant isolation"
+    },
+    {
+     "value": "0",
+     "label": "client records retained"
+    }
+   ],
+   "callout": "<strong>Why it mattered:</strong> the application was not missing authentication. It was missing the second question every multi-tenant system must answer on every request: <em>does this user’s tenant own this row?</em>",
+   "tags": [
+    "BOLA",
+    "Django REST",
+    "Authorization",
+    "Retest"
+   ]
+  },
+  {
+   "id": "member-portal",
+   "no": "02",
+   "filters": [
+    "web"
+   ],
+   "category": "Web",
+   "severity": "Critical",
+   "sector": "Membership",
+   "title": "The debug folder that opened the front door",
+   "summary": "A production debug directory exposed live session state, enabling account takeover. The same portal accepted executable uploads into a web-served directory.",
+   "summaryTags": [
+    "Session hijacking",
+    "Unrestricted upload",
+    "Origin exposure",
+    "PII protection"
+   ],
+   "meta": [
+    {
+     "label": "Engagement",
+     "value": "Black + grey-box web test"
+    },
+    {
+     "label": "Surface",
+     "value": "Member portal + document upload"
+    },
+    {
+     "label": "Window",
+     "value": "12 testing days"
+    },
+    {
+     "label": "Disclosure",
+     "value": "Coordinated · 2025"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>The portal handles member registration, identity-document uploads, digital membership cards, payments, and facility bookings for a high-profile membership organization. It sat behind a reverse proxy and a web application firewall, and the team reasonably assumed that the edge was enforcing the important controls.</p>\n<p>The assessment was scoped to the public portal and its document workflows. The client asked for evidence of account takeover and file-processing risk, not a broad infrastructure scan.</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Mapped the perimeter.</strong> Subdomain enumeration, certificate transparency, and DNS history identified several administrative and staging hostnames that did not share the primary site’s proxy configuration.</li>\n<li><strong>Found a direct path to the origin.</strong> One of those hostnames resolved directly to the hosting origin. Sending a request with the main site’s host header returned the application, bypassing the edge WAF entirely.</li>\n<li><strong>Discovered a production debug directory.</strong> Directory discovery exposed a framework debug folder that was readable over HTTP. It contained execution traces and session state, including live session identifiers.</li>\n<li><strong>Replayed a session without credentials.</strong> I injected a recovered session cookie into a clean browser profile and reached the authenticated member dashboard. I limited the proof to a synthetic test account and one metadata response; no identity documents were downloaded.</li>\n<li><strong>Tested the upload boundary.</strong> The document-upload endpoint validated neither extension nor file content and stored files under a web-executable path. I uploaded a harmless proof file that returned a unique token, confirmed execution, then removed it with the client’s approval.</li>\n<li><strong>Found exposed configuration.</strong> A dotfile in the web root was directly readable and exposed key names and database settings. I confirmed the exposure without copying secret values; the client rotated everything afterward.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<pre><code><span class=\"c\"># Sanitized chain — values removed</span>\nGET /&lt;debug-path&gt;/&lt;dump&gt;.json          <span class=\"r\">→ 200 (session state exposed)</span>\nCookie: &lt;session&gt;                        <span class=\"y\">→ authenticated member dashboard</span>\nPOST /&lt;upload-endpoint&gt;                  <span class=\"r\">→ 200</span>\nfilename=\"proof.&lt;server-side-extension&gt;\" <span class=\"r\">→ stored in executable web path</span></code></pre>"
+    },
+    {
+     "title": "How we fixed it",
+     "html": "<ol>\n<li><strong>Contained the active compromise.</strong> All sessions were invalidated, application and database secrets were rotated, and administrative users were required to re-authenticate with MFA.</li>\n<li><strong>Removed debug tooling from production.</strong> Debug logging was disabled, writable and diagnostic directories moved outside the web root, and direct access to dotfiles and debug paths was denied at both edge and origin.</li>\n<li><strong>Rebuilt the upload pipeline.</strong> The new flow allowlists image/PDF extensions, verifies magic bytes, re-encodes images, assigns random names, stores files outside the executable root, and scans uploads before release.</li>\n<li><strong>Locked the origin to the edge.</strong> Ingress now accepts only the provider’s published ranges, with authenticated origin pulls or mutual TLS. Staging DNS records were removed from public zones.</li>\n<li><strong>Hardened the session layer.</strong> Cookies gained <code>Secure</code>, <code>HttpOnly</code>, and <code>SameSite</code> attributes; session rotation on login was enforced; HSTS and a restrictive content-security policy were deployed.</li>\n</ol>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>Replaying the captured session returned <code>401</code>. Mixed-case, double-extension, and content-type mismatch uploads were rejected. Direct-to-origin requests timed out, and the exposed configuration path returned <code>404</code>. The client also reviewed access logs around the exposure window and found no evidence of document downloads.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "401",
+     "label": "replayed session result"
+    },
+    {
+     "value": "3",
+     "label": "exploit paths closed"
+    },
+    {
+     "value": "0",
+     "label": "identity documents accessed"
+    }
+   ],
+   "callout": "<strong>The lesson:</strong> a WAF protects the hostname configured in front of it. A forgotten staging record, an exposed origin, or a debug directory in the web root can route around the entire control plane.",
+   "tags": [
+    "Session security",
+    "File upload",
+    "Origin lock",
+    "Incident containment"
+   ]
+  },
+  {
+   "id": "logistics-perimeter",
+   "no": "03",
+   "filters": [
+    "network"
+   ],
+   "category": "Network",
+   "severity": "High",
+   "sector": "Logistics",
+   "title": "The WAF was never the wall",
+   "summary": "Public DNS and certificate data exposed the hosting origin. Direct requests bypassed the edge, and administrative gateways were reachable from the internet.",
+   "summaryTags": [
+    "External ASM",
+    "Origin exposure",
+    "Management plane",
+    "ZTNA"
+   ],
+   "meta": [
+    {
+     "label": "Engagement",
+     "value": "External perimeter + ASM"
+    },
+    {
+     "label": "Surface",
+     "value": "Hybrid hosting estate"
+    },
+    {
+     "label": "Window",
+     "value": "15 testing days"
+    },
+    {
+     "label": "Disclosure",
+     "value": "Coordinated · 2025"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>A logistics and supply-chain group asked for an external assessment of its internet-facing estate. The primary websites were behind a CDN and WAF, but the organization had accumulated years of hosting, acquisitions, and staging environments. The goal was to see the perimeter as an outsider would — including everything the asset inventory had forgotten.</p>\n<p>The engagement was non-destructive: no password spraying, no exploitation of management services, and no access to production data. Where a login surface was found, the finding was the exposure itself.</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Enumerated the external footprint.</strong> DNS, WHOIS, certificate transparency, and passive infrastructure data produced subdomains, hosting ranges, and mail-related records that were not in the client’s current inventory.</li>\n<li><strong>Followed the mail records.</strong> A public SPF record listed the organization’s origin hosts. Cross-referencing those addresses with TLS certificates and subdomain history confirmed that several belonged to the primary web estate.</li>\n<li><strong>Verified the WAF bypass.</strong> A direct HTTPS request to an origin address, with the public host header, returned the application. Cloudflare headers and rate-limit behavior were absent.</li>\n<li><strong>Mapped the exposed services.</strong> Light-touch port scanning found a remote desktop gateway, a database administration console, and a staging API on public addresses without source-IP allowlists or SSO.</li>\n<li><strong>Checked the management surface.</strong> I confirmed the login pages and TLS configuration only. No credentials were guessed and no session was established. The exposure was enough to demonstrate the risk.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<pre><code><span class=\"c\"># Direct-to-origin request — sanitized</span>\ncurl --resolve &lt;public-host&gt;:443:&lt;origin-address&gt; https://&lt;public-host&gt;/\n<span class=\"r\">HTTP/1.1 200 OK</span>   <span class=\"c\"># response from origin, no edge headers</span>\n<span class=\"c\"># Publicly reachable management surfaces</span>\n&lt;admin-gateway&gt;:443  <span class=\"y\">→ login page, no IP allowlist</span>\n&lt;database-console&gt;  <span class=\"y\">→ login page, no SSO</span></code></pre>"
+    },
+    {
+     "title": "How we fixed it",
+     "html": "<ol>\n<li><strong>Made the origin private by policy.</strong> Ingress firewall rules now accept HTTP/HTTPS only from the CDN provider’s published ranges, with authenticated origin pulls or mutual TLS so a spoofed source cannot simply claim to be the edge.</li>\n<li><strong>Moved management behind ZTNA.</strong> The remote desktop gateway and database console were removed from public DNS and placed behind a zero-trust access proxy with device posture and phishing-resistant MFA.</li>\n<li><strong>Cleaned the DNS and mail records.</strong> SPF, MX, and staging records were reviewed so they no longer advertise origin infrastructure. Historical records were documented and monitored rather than left to memory.</li>\n<li><strong>Built an owned asset inventory.</strong> The client adopted a continuous external discovery process with named owners, review cadence, and alerting for new certificates or hosts appearing outside the approved range.</li>\n<li><strong>Added defense in depth.</strong> WAF rules, rate limits, and alerting were tuned, but no longer treated as the only control protecting the origin.</li>\n</ol>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>After the change, direct-to-origin requests timed out, management hostnames no longer resolved publicly, and the exposed services were reachable only through the access proxy. A rescan of the external range showed a 78% reduction in observable attack surface.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "78%",
+     "label": "external surface reduction"
+    },
+    {
+     "value": "3",
+     "label": "management paths removed"
+    },
+    {
+     "value": "0",
+     "label": "credentials attempted"
+    }
+   ],
+   "callout": "<strong>The lesson:</strong> a WAF is an application-layer control, not a network boundary. If the origin is reachable directly, the attacker simply chooses a different route.",
+   "tags": [
+    "ASM",
+    "Cloudflare",
+    "SPF",
+    "Zero trust"
+   ]
+  },
+  {
+   "id": "telecom-perimeter",
+   "no": "04",
+   "filters": [
+    "network",
+    "web"
+   ],
+   "category": "Network",
+   "severity": "Critical",
+   "sector": "Telecom",
+   "title": "When a CMS becomes a doorway",
+   "summary": "Path traversal in a public CMS component exposed system files and configuration. Two separate SQL injection classes reached back-end database metadata.",
+   "summaryTags": [
+    "LFI",
+    "SQL injection",
+    "National infrastructure",
+    "Segmentation"
+   ],
+   "meta": [
+    {
+     "label": "Engagement",
+     "value": "External network + web test"
+    },
+    {
+     "label": "Surface",
+     "value": "40+ public subdomains"
+    },
+    {
+     "label": "Window",
+     "value": "18 testing days"
+    },
+    {
+     "label": "Disclosure",
+     "value": "Coordinated · 2024–25"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>A national telecom and regulatory environment asked for an external assessment of its public infrastructure. The estate included consumer service portals, mobile financial services, a regulatory search application, and internal call-center tooling. Because of the sensitivity, the rules of engagement were unusually strict: prove the first viable path, capture the minimum evidence, stop, and escalate immediately.</p>\n<p>This is the kind of environment where a “full dump” is not a demonstration of skill. Restraint is part of the test.</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Mapped the ASN and certificate history.</strong> I combined passive DNS, certificate transparency, and netblock ownership to identify more than 40 live subdomains, including staging and regional service portals.</li>\n<li><strong>Profiled the public applications.</strong> One CMS-based portal exposed an asset parameter that accepted a filename. Normal requests returned expected content; traversal sequences escaped the intended directory.</li>\n<li><strong>Verified file read with one harmless target.</strong> I read the first lines of a standard system account file to confirm traversal, then a configuration file header to confirm exposure of secret material. I did not retrieve subscriber data or bulk configuration.</li>\n<li><strong>Tested the search surface.</strong> A regulatory record filter reflected database metadata through a union-based injection. A separate call-center login showed a repeatable time delay with a statistical check across multiple requests, confirming blind injection rather than network jitter.</li>\n<li><strong>Stopped at metadata.</strong> The proof reached database version and current user only. No tables, subscriber records, or business data were enumerated. The client was notified the same day.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<pre><code><span class=\"c\"># Sanitized traversal proof</span>\nGET /&lt;component&gt;?&lt;asset-param&gt;=../../../../etc/passwd\n<span class=\"r\">HTTP/1.1 200 OK</span>  <span class=\"c\">→ first lines of system account file</span>\n<span class=\"c\"># Sanitized SQLi proof — metadata only</span>\n&lt;filter&gt;' UNION SELECT @@version, current_user()-- -\n<span class=\"r\">→ database version and service account disclosed</span></code></pre>"
+    },
+    {
+     "title": "How we fixed it",
+     "html": "<ol>\n<li><strong>Closed the file-read path.</strong> The asset parameter was replaced with a strict identifier allowlist. Path separators and encoded traversal were rejected before filesystem access, and PHP execution was constrained with an open-basedir boundary.</li>\n<li><strong>Removed the vulnerable component.</strong> The unused CMS plugin was deleted rather than patched in place, reducing the long-term maintenance surface.</li>\n<li><strong>Parameterized every query.</strong> Dynamic SQL in the search and login paths was converted to prepared statements with typed parameters. Verbose database errors were suppressed.</li>\n<li><strong>Reduced database privilege.</strong> The public application account lost unnecessary schema and file permissions. Secrets found in configuration were rotated, and config files were moved outside the web root.</li>\n<li><strong>Segmented the public tier.</strong> Internet-facing portals were isolated from core routing and subscriber systems, with egress filtering and a reviewed allowlist between tiers.</li>\n<li><strong>Added regression coverage.</strong> Traversal, encoding, and injection test cases were added to the release pipeline, alongside a WAF virtual patch for immediate coverage.</li>\n</ol>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>Traversal payloads returned <code>400</code>/<code>404</code>, including encoded and double-encoded variants. The blind injection timing returned to baseline across repeated measurements, and the union path no longer reflected metadata. The database account was confirmed to lack file and schema-level access.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "40+",
+     "label": "public hosts mapped"
+    },
+    {
+     "value": "2",
+     "label": "critical classes closed"
+    },
+    {
+     "value": "0",
+     "label": "subscriber records accessed"
+    }
+   ],
+   "callout": "<strong>Why it mattered:</strong> the file-read and injection paths were separate findings, but they shared a root cause — public components being trusted with direct access to system and data layers. Segregation limited what either could reach.",
+   "tags": [
+    "Path traversal",
+    "SQLi",
+    "Secure SDLC",
+    "Segmentation"
+   ]
+  },
+  {
+   "id": "mobile-crypto",
+   "no": "05",
+   "filters": [
+    "mobile",
+    "api"
+   ],
+   "category": "Mobile & API",
+   "severity": "High",
+   "sector": "Identity",
+   "title": "Reading the envelope",
+   "summary": "A mobile identity service wrapped every request in a proprietary cryptographic envelope. The scheme was sound enough to stop casual inspection — but not enough to stop replay.",
+   "summaryTags": [
+    "Android reversing",
+    "Frida",
+    "Crypto protocol",
+    "Replay protection"
+   ],
+   "meta": [
+    {
+     "label": "Engagement",
+     "value": "Mobile app + API audit"
+    },
+    {
+     "label": "Surface",
+     "value": "Android client, identity API"
+    },
+    {
+     "label": "Window",
+     "value": "14 testing days"
+    },
+    {
+     "label": "Disclosure",
+     "value": "Coordinated · 2025"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>The client operates a mobile identity and verification service. The Android app did not send plain JSON; every request body was binary and accompanied by a custom key header. The engineering team believed the proprietary envelope made automated abuse impractical.</p>\n<p>The assessment asked a narrower question than “can the app be reverse engineered?” — it asked whether the protocol provided a real security boundary or only obfuscation.</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Decompiled and reviewed the client.</strong> Jadx and Apktool exposed the network stack, interceptor classes, and a public-key asset embedded in the APK. The app used certificate pinning and root detection, which I bypassed in a lab build with Frida hooks.</li>\n<li><strong>Observed the crypto calls.</strong> Hooks around the platform cipher, key factory, and digest classes showed where the session key was generated, wrapped, and attached to the request.</li>\n<li><strong>Reconstructed the envelope.</strong> The body was GZIP-compressed, encrypted with a random AES-256 key in CBC mode, and prefixed with the raw IV. The AES key was encrypted with the embedded RSA-2048 public key using PKCS#1 v1.5 and sent in a custom header.</li>\n<li><strong>Built a standalone client.</strong> I implemented the same envelope in Python against a test account and confirmed the server accepted synthetically generated requests. This proved the protocol was not bound to the official app.</li>\n<li><strong>Tested the trust model.</strong> There was no server-issued nonce, timestamp window, device attestation, or meaningful per-identity rate limit. A captured request could be replayed, and new requests could be generated once the public key was known.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<pre><code><span class=\"c\"># Reconstructed request envelope (illustrative)</span>\nbody    = iv || AES-256-CBC(gzip(json), key, iv)\nheader  = base64(RSA-PKCS1v1.5(public_key, key))\nPOST /&lt;api-path&gt;\nX-Client-Key: &lt;wrapped-key&gt;\n&lt;binary body&gt;\n<span class=\"r\">→ accepted without app attestation or server nonce</span></code></pre>"
+    },
+    {
+     "title": "How we fixed it",
+     "html": "<ol>\n<li><strong>Added server-issued challenges.</strong> Each session now receives a short-lived nonce and sequence counter. Requests include a signature over the nonce, timestamp, and body digest, and the server rejects duplicates.</li>\n<li><strong>Bound requests to a device identity.</strong> The client uses a hardware-backed Android Keystore key, with Play Integrity attestation for sensitive actions. The server verifies both before issuing elevated tokens.</li>\n<li><strong>Reduced replay value.</strong> Access tokens are short-lived and scoped to a device session. A timestamp window and idempotency keys prevent request reuse.</li>\n<li><strong>Moved to authenticated encryption.</strong> New protocol versions use AES-GCM or ChaCha20-Poly1305 with associated data, replacing the unauthenticated CBC construction.</li>\n<li><strong>Enforced per-identity limits.</strong> Rate limits and anomaly detection now key off the authenticated identity and device, not just source IP. Bulk enumeration patterns trigger review and throttling.</li>\n</ol>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>A replayed request was rejected, a synthetic client without a valid nonce could not complete a session, and rate limits triggered after a small number of requests from the same identity. The updated client continued to work with the new protocol, and the old version was retired.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "2048",
+     "label": "bit RSA key recovered"
+    },
+    {
+     "value": "4",
+     "label": "stage envelope reversed"
+    },
+    {
+     "value": "0",
+     "label": "customer records accessed"
+    }
+   ],
+   "callout": "<strong>The lesson:</strong> encrypted transport is not the same as trusted transport. If the client holds the only secret and the server accepts any well-formed envelope, the crypto is confidentiality — not authentication.",
+   "tags": [
+    "Frida",
+    "AES / RSA",
+    "Play Integrity",
+    "mTLS"
+   ]
+  },
+  {
+   "id": "android-rat",
+   "no": "06",
+   "filters": [
+    "mobile"
+   ],
+   "category": "Mobile / RE",
+   "severity": "Critical",
+   "sector": "Malware",
+   "title": "The app that became the network",
+   "summary": "A trojan disguised as a traffic-notice app abused Android’s VPN service to become the device’s egress point, then loaded a second-stage payload from rotating infrastructure.",
+   "summaryTags": [
+    "Android",
+    "VpnService",
+    "Dropper",
+    "Detection engineering"
+   ],
+   "meta": [
+    {
+     "label": "Engagement",
+     "value": "Android malware analysis"
+    },
+    {
+     "label": "Surface",
+     "value": "APK, native loader, network"
+    },
+    {
+     "label": "Window",
+     "value": "9 analysis days"
+    },
+    {
+     "label": "Disclosure",
+     "value": "Private client · 2025"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>The sample arrived through a targeted SMS and WhatsApp campaign. It impersonated a municipal traffic-violation portal and asked victims to install an APK to “review a notice.” The client needed to understand the delivery chain, the device capabilities it abused, and the network signatures its fleet could detect.</p>\n<p>Analysis was performed in an isolated lab. Egress was restricted at the hypervisor boundary, and no live payload was allowed to reach production infrastructure.</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Started with the manifest.</strong> The APK requested <code>BIND_VPN_SERVICE</code>, <code>RECEIVE_BOOT_COMPLETED</code>, and <code>REQUEST_INSTALL_PACKAGES</code> — a combination that gives a sideloaded app network control, persistence, and the ability to install another payload.</li>\n<li><strong>Located the rogue VPN service.</strong> The service built a local TUN interface with a private address and a default route, effectively directing all device traffic into the app’s own socket layer.</li>\n<li><strong>Traced the second stage.</strong> A broadcast receiver fetched an encrypted payload from rotating infrastructure, wrote it to the app’s private cache, decrypted it with a bundled key, and loaded it dynamically with <code>DexClassLoader</code>.</li>\n<li><strong>Observed behavior dynamically.</strong> With Frida and a lab network capture, I confirmed the service start, the route configuration, and the staged download. The capture showed cleartext DNS and metadata, not magical TLS decryption.</li>\n<li><strong>Built detection content.</strong> I mapped the observed behavior to host and network indicators, wrote a YARA rule for the APK family, and produced Sigma logic for endpoint telemetry around VPN-service abuse and dynamic DEX loading.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<pre><code><span class=\"c\">// Sanitized behavior sketch — values generalized</span>\nVpnService.Builder()\n  .addAddress(&lt;private-tun-address&gt;, 32)\n  .addRoute(\"0.0.0.0\", 0)          <span class=\"r\">// capture all egress</span>\n  .addDnsServer(&lt;external-resolver&gt;)\n  .establish()\n<span class=\"c\">// Second stage</span>\ndownload(&lt;encrypted-dex&gt;) → decrypt(&lt;bundled-key&gt;) → DexClassLoader.load()</code></pre>"
+    },
+    {
+     "title": "What it could — and could not — see",
+     "html": "<p>A local VPN is a powerful position. It can observe destinations, DNS queries, traffic volume, and any cleartext HTTP. It can redirect or block connections. It cannot, by itself, decrypt modern TLS without another capability such as a trusted certificate or a compromised endpoint.</p>\n<p>The accurate risk was therefore not “the app reads every encrypted message.” It was that a sideloaded app had been granted control of the device’s entire network path, with the ability to stage additional code. That is more than enough to enable credential phishing, traffic manipulation, and follow-on payloads.</p>"
+    },
+    {
+     "title": "How we defended it",
+     "html": "<ol>\n<li><strong>Blocked sideloading on managed devices.</strong> MDM policy now disallows installation from unknown sources and alerts on apps requesting VPN or install-packages permissions.</li>\n<li><strong>Added network detections.</strong> The client deployed the indicators and YARA signature, blocked the observed infrastructure patterns, and monitored for external DNS resolvers and anomalous VPN interfaces.</li>\n<li><strong>Gave the SOC a playbook.</strong> The response runbook covers app removal, credential rotation, session revocation, and review of any second-stage activity.</li>\n<li><strong>Tuned user awareness.</strong> The campaign relied on a believable municipal notice. Awareness guidance focused on the install prompt and the VPN permission, not on generic “don’t click links” advice.</li>\n</ol>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>The YARA rule matched the sample and a controlled variant. Sigma logic fired on synthetic telemetry for VPN-service creation and dynamic DEX loading. The indicators were deployed to the client’s endpoint and network tooling, and the playbook was exercised with the SOC.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "14",
+     "label": "high-fidelity indicators"
+    },
+    {
+     "value": "2",
+     "label": "detection formats delivered"
+    },
+    {
+     "value": "0",
+     "label": "live C2 interactions"
+    }
+   ],
+   "callout": "<strong>The lesson:</strong> permission abuse is a capability. A user who grants VPN access to an unknown app has handed it the same position a network attacker spends weeks trying to reach.",
+   "tags": [
+    "Android",
+    "YARA",
+    "Sigma",
+    "MDM"
+   ]
+  },
+  {
+   "id": "cicd-rce",
+   "no": "07",
+   "filters": [
+    "research"
+   ],
+   "category": "Research",
+   "severity": "Critical",
+   "sector": "CI/CD",
+   "title": "Trust, but deserialize",
+   "summary": "An unauthenticated build-agent endpoint passed XML into an unpinned deserializer. A vendor-specific object graph reached command execution before authentication.",
+   "summaryTags": [
+    "CWE-502",
+    "XStream",
+    "Pre-auth RCE",
+    "Coordinated disclosure"
+   ],
+   "meta": [
+    {
+     "label": "Engagement",
+     "value": "Vulnerability research"
+    },
+    {
+     "label": "Surface",
+     "value": "CI/CD agent control plane"
+    },
+    {
+     "label": "Window",
+     "value": "21 research days"
+    },
+    {
+     "label": "Disclosure",
+     "value": "Vendor coordinated"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>The target was an enterprise CI/CD orchestration product with a distributed build-agent model. Agents register with a central controller, poll for work, and report command results. This control plane is unusually valuable: whoever can speak to it convincingly may be able to run code in the build environment, where source code and deployment credentials live.</p>\n<p>The research focused on the agent registration and error-reporting path, not on the product’s authenticated administrative UI.</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Mapped the trust boundary.</strong> A synthetic agent could register a session without presenting a pre-shared credential. The controller accepted the session and exposed the agent command surface.</li>\n<li><strong>Traced the error path.</strong> The command error endpoint accepted XML from a registered agent and passed it to a deserializer configured without a type allowlist. That is the classic condition for object injection.</li>\n<li><strong>Looked for reachable gadgets.</strong> Standard library and framework chains were filtered. A product-specific exception object with an embedded database data source was not.</li>\n<li><strong>Built the smallest chain.</strong> Instantiating that object triggered a database initialization path, which executed a controlled SQL statement. The statement wrote a harmless proof file outside the intended directory. From there, I verified command execution with a single identity command and stopped.</li>\n<li><strong>Reported with a fix, not just a finding.</strong> The advisory included the root cause, the minimal reproduction, the affected trust boundary, and a proposed allowlist architecture. The vendor confirmed the issue and shipped a patch.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<pre><code><span class=\"c\">&lt;!-- Structural sketch only; class names and payload removed --&gt;</span>\n&lt;map&gt;\n  &lt;entry&gt;\n    &lt;string&gt;session&lt;/string&gt;\n    &lt;vendor-object&gt;\n      &lt;embedded-datasource&gt;...&lt;/embedded-datasource&gt;\n    &lt;/vendor-object&gt;\n  &lt;/entry&gt;\n&lt;/map&gt;\n<span class=\"r\">→ object construction reached a database initialization sink</span></code></pre>"
+    },
+    {
+     "title": "How we fixed it",
+     "html": "<ol>\n<li><strong>Denied by default in the deserializer.</strong> The patch enables the security framework, denies all types, and explicitly allows only the small set of DTOs used by agent reports.</li>\n<li><strong>Required agent identity.</strong> Agent registration now uses a per-agent credential and mutual TLS; error reports are accepted only from an authenticated, enrolled agent session.</li>\n<li><strong>Made the web root read-only.</strong> The deployment runs the application with a read-only root filesystem and no write access to the web application directory, breaking the file-drop step even if another gadget appears.</li>\n<li><strong>Reduced the gadget surface.</strong> The embedded database component was removed from the agent process, and dependency review now includes deserialization gadgets.</li>\n<li><strong>Added monitoring.</strong> The product emits high-severity alerts for unexpected file creation in the web root and for deserialization errors involving unapproved types.</li>\n</ol>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>After the patch, the original object graph was rejected before construction. A new agent could no longer register without credentials. The read-only filesystem blocked the proof write, and the vendor’s regression test confirmed that legitimate agent reports still worked.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "Pre-auth",
+     "label": "execution path closed"
+    },
+    {
+     "value": "9.8",
+     "label": "researcher CVSS assessment"
+    },
+    {
+     "value": "1",
+     "label": "command used as proof"
+    }
+   ],
+   "callout": "<strong>The lesson:</strong> deserialization bugs are rarely about the parser. They are about every class on the classpath that can do something interesting when constructed. An allowlist is not a nice-to-have; it is the boundary.",
+   "tags": [
+    "Deserialization",
+    "Java",
+    "CI/CD",
+    "Vendor advisory"
+   ]
+  },
+  {
+   "id": "cms-upload-rce",
+   "no": "08",
+   "filters": [
+    "research",
+    "web"
+   ],
+   "category": "Research",
+   "severity": "Critical",
+   "sector": "CMS",
+   "title": "The extension filter that wasn’t",
+   "summary": "A CMS archive upload relied on a case-sensitive blocklist. A mixed-case filename plus an execution-handler override turned a media upload into remote code execution.",
+   "summaryTags": [
+    "File upload",
+    "Canonicalization",
+    "RCE",
+    "Secure design"
+   ],
+   "meta": [
+    {
+     "label": "Engagement",
+     "value": "Vulnerability research"
+    },
+    {
+     "label": "Surface",
+     "value": "CMS media + archive import"
+    },
+    {
+     "label": "Window",
+     "value": "16 research days"
+    },
+    {
+     "label": "Disclosure",
+     "value": "Vendor coordinated"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>The target was a page-builder CMS with a media library and an archive import feature used to migrate themes and assets. The upload path appeared to block executable extensions, and the application had a reputation for being security-conscious. The question was whether the filter was canonicalizing input before it made a decision.</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Reviewed the upload contract.</strong> The client accepted ZIP archives, extracted them server-side, and preserved directory structure. The extension check compared against a lowercase blocklist.</li>\n<li><strong>Tested case and encoding variants.</strong> A file whose extension differed only by case passed the blocklist. On a case-insensitive filesystem or with a handler override, it remained executable.</li>\n<li><strong>Tested handler control.</strong> The archive importer also accepted server configuration files. A minimal handler override in an uploaded directory was enough to make a benign image extension execute as code.</li>\n<li><strong>Confirmed with a harmless proof.</strong> I wrote a file that returned a unique token when requested through the web server. No reverse shell, no persistence, and no data access were used. The file and directory were removed after evidence capture.</li>\n<li><strong>Reported the chain.</strong> The advisory explained that the bug was not merely “PHP upload.” It was the combination of non-canonical extension checking, archive extraction trust, and execution enabled in a user-writable directory.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<pre><code><span class=\"c\"># Sanitized chain</span>\n1. upload archive containing mixed-case executable extension\n2. extractor preserves name, blocklist compares lowercase only\n3. handler file in upload directory maps image extension to executable\n4. GET /&lt;upload-dir&gt;/&lt;proof&gt;.&lt;ext&gt;  <span class=\"r\">→ 200, proof token returned</span></code></pre>"
+    },
+    {
+     "title": "How we fixed it",
+     "html": "<ol>\n<li><strong>Canonicalized before validation.</strong> Filenames are Unicode-normalized, lowercased, and stripped of control characters and trailing dots before the allowlist check.</li>\n<li><strong>Switched from blocklist to allowlist.</strong> Only a short set of image, document, and archive types is accepted, verified by magic bytes as well as extension.</li>\n<li><strong>Stopped trusting archive paths.</strong> Extraction rejects absolute paths, traversal sequences, symlinks, and nested archives beyond a defined depth. Extracted files receive generated names.</li>\n<li><strong>Removed execution from the upload tier.</strong> Media is served from object storage or a separate host with script execution disabled. Handler configuration files are rejected and never written to web-accessible paths.</li>\n<li><strong>Added virtual patching and tests.</strong> The WAF blocks mixed-case and double-extension patterns immediately, while the product fix and regression tests cover the root cause.</li>\n</ol>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>Mixed-case, double-extension, traversal, and handler-override attempts were rejected. The stored proof file was no longer executable, and the vendor’s regression suite covered the canonicalization cases. The client deployed the virtual patch before the vendor update was available.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "3",
+     "label": "bypass classes closed"
+    },
+    {
+     "value": "0",
+     "label": "data accessed"
+    },
+    {
+     "value": "1",
+     "label": "vendor patch validated"
+    }
+   ],
+   "callout": "<strong>The lesson:</strong> security filters must run on the same representation the filesystem will use. If validation sees a different string than execution sees, the filter is decoration.",
+   "tags": [
+    "Canonicalization",
+    "Upload security",
+    "PHP",
+    "Disclosure"
+   ]
+  },
+  {
+   "id": "mobile-oauth-recovery",
+   "no": "09",
+   "filters": [
+    "mobile",
+    "research"
+   ],
+   "category": "Mobile / RE",
+   "severity": "High",
+   "sector": "Twitter / X",
+   "title": "Obfuscation is not encryption",
+   "summary": "The official Twitter (X) Android app stored its OAuth 1.0a consumer credentials behind a reversible arithmetic transform. Decompiling the client and undoing one byte operation recovered the signing key.",
+   "summaryTags": [
+    "Android reversing",
+    "OAuth 1.0a",
+    "Credential exposure",
+    "Coordinated disclosure"
+   ],
+   "meta": [
+    {
+     "label": "Program",
+     "value": "Twitter (X) — HackerOne"
+    },
+    {
+     "label": "Surface",
+     "value": "com.twitter.android (APK)"
+    },
+    {
+     "label": "Window",
+     "value": "Independent research"
+    },
+    {
+     "label": "Disclosure",
+     "value": "HackerOne · Apr 2026"
+    }
+   ],
+   "sections": [
+    {
+     "title": "Context",
+     "html": "<p>The target was <code>com.twitter.android</code>, the official Twitter (X) Android app, tested under Twitter's public HackerOne bug bounty program. Native mobile apps for API-driven platforms often embed a consumer key and secret so the client can sign its own requests before a user ever logs in. Those values are not meant to be extractable from the installed package, so the app's build pipeline ran them through a byte-level transform rather than storing them as plain strings.</p>\n<p>The question driving the research was simple: does that transform function as real protection, or only as a speed bump for anyone willing to read the decompiled code?</p>"
+    },
+    {
+     "title": "How I found it",
+     "html": "<ol>\n<li><strong>Decompiled the APK.</strong> Running apktool against <code>com.twitter.android</code> produced readable Smali across dozens of packages. A small, oddly named class (<code>ttu.smali</code>) initialized two static string fields from byte arrays rather than string literals — an immediate signal that something was being deliberately obscured.</li>\n<li><strong>Read the transform.</strong> The class’s static initializer looped over each byte array and applied <code>rsub-int/lit8</code> with a constant, then converted the result to a character. That is a single fixed subtraction per byte — a classic “hide it from <code>strings</code>” trick rather than real cryptography, and trivial to reverse by hand or in a short script.</li>\n<li><strong>Traced where the decoded values went.</strong> The two decoded strings were passed into a small credential-container class (<code>fhj.smali</code>), which was in turn consumed by the app’s OAuth 1.0a signing engine (<code>khj.smali</code>) and by a secondary OAuth2 basic-auth path (<code>aqc.smali</code>). The signing engine referenced the constants by name as <code>oauth_consumer_key</code> and the paired secret used in HMAC-SHA1 signing.</li>\n<li><strong>Confirmed the values were live.</strong> I decoded the byte arrays offline, then reimplemented the client’s OAuth 1.0a request-signing logic in a standalone script: build the signature base string, HMAC-SHA1 it with the recovered consumer secret, and attach the resulting <code>Authorization</code> header to a request built with the same client headers the official app sends.</li>\n<li><strong>Proved impersonation, not data access.</strong> A request signed this way was accepted as if it came from the official client. I limited the proof to confirming that a correctly signed, unauthenticated-tier request succeeded — I did not use the recovered credentials against authenticated endpoints or pull user data.</li>\n</ol>"
+    },
+    {
+     "title": "The evidence",
+     "html": "<p>Credential values, tokens, and signatures below are illustrative placeholders, not the recovered material.</p>\n<pre><code><span class=\"c\">// Decompiled static initializer — structure, not values</span>\nsput-object v0, L&lt;obfuscated-class&gt;;-&gt;d:Ljava/lang/String;  <span class=\"c\">// consumer key</span>\nsput-object v0, L&lt;obfuscated-class&gt;;-&gt;e:Ljava/lang/String;  <span class=\"c\">// consumer secret</span>\n<span class=\"c\">// The \"obfuscation\": one subtraction per byte, in a loop</span>\nrsub-int/lit8 v7, v7, 0x16      <span class=\"c\">// decoded_byte = 0x16 - raw_byte</span>\nint-to-char v7, v7\n<span class=\"c\">// Reconstructed OAuth 1.0a header (sanitized)</span>\nAuthorization: OAuth realm=\"&lt;api-origin&gt;\",\n  oauth_consumer_key=\"&lt;recovered-key&gt;\",\n  oauth_signature_method=\"HMAC-SHA1\",\n  oauth_nonce=\"&lt;nonce&gt;\", oauth_timestamp=\"&lt;ts&gt;\",\n  oauth_signature=\"&lt;hmac-sha1-sig&gt;\"\n<span class=\"r\">→ accepted by the API as a request from the official client</span></code></pre>"
+    },
+    {
+     "title": "How it was addressed",
+     "html": "<p>The report was triaged by HackerOne as a duplicate of an already-known issue, which is itself informative: embedded, lightly-obscured consumer credentials in mobile OAuth 1.0a clients are a recurring class across large API-driven apps, not a one-off oversight. The direction of a durable fix is consistent with how Twitter/X and others in this space have since moved:</p>\n<ol>\n<li><strong>Stop treating a client secret as secret.</strong> Any value shipped inside an installable package should be assumed public. Per-app consumer credentials used only to identify “this is the official client” carry little security value once that assumption is made.</li>\n<li><strong>Move trust decisions server-side.</strong> Rate limits, abuse detection, and app-identity checks were shifted toward signals the client cannot forge by reading its own binary — attested app integrity, device-bound tokens, and behavioral/anomaly detection on the API side.</li>\n<li><strong>Reduce what a bare consumer key/secret pair can do.</strong> Unauthenticated, app-only requests were scoped down so that recovering the embedded credential alone no longer provides meaningful API access without an additional, harder-to-forge signal.</li>\n<li><strong>Treat obfuscation as a delay, not a boundary.</strong> Where client-side secrecy is still used as one layer, it is paired with controls that assume it will eventually be defeated, rather than being the sole gate in front of API capability.</li>\n</ol>"
+    },
+    {
+     "title": "Verification & outcome",
+     "html": "<p>The proof-of-concept script reliably produced accepted, correctly signed requests using only values recovered through static analysis of the public APK, with no runtime hooking or device needed. The finding was written up and submitted through the program’s standard disclosure process.</p>"
+    }
+   ],
+   "outcomes": [
+    {
+     "value": "1",
+     "label": "byte transform reversed"
+    },
+    {
+     "value": "3",
+     "label": "Smali classes traced end to end"
+    },
+    {
+     "value": "0",
+     "label": "user accounts accessed"
+    }
+   ],
+   "callout": "<strong>The lesson:</strong> a transform that keeps a value out of <code>strings -a</code> is not a security control. If the decoding logic ships in the same package as the encoded value, an attacker has everything needed to reverse it — the only question is how long the reversing takes.",
+   "tags": [
+    "apktool / Smali",
+    "OAuth 1.0a",
+    "HMAC-SHA1",
+    "Static analysis"
+   ]
+  }
+ ],
+ "archive": [
+  [
+   "Fintech",
+   "Object-level authorization gap in transaction receipt retrieval.",
+   "Ownership checks + signed, expiring URLs."
+  ],
+  [
+   "Government",
+   "Low-entropy, reusable password-reset tokens.",
+   "Single-use tokens, rotation, and rate limits."
+  ],
+  [
+   "B2B SaaS",
+   "Mass assignment allowed a standard user to set a privileged role field.",
+   "Server-side field allowlists and role regression tests."
+  ],
+  [
+   "Telecom",
+   "Public UAT environment containing production-like subscriber data.",
+   "Access removed, data purged, environment isolated."
+  ],
+  [
+   "Retail",
+   "GraphQL endpoint exposed privileged mutations without field-level authorization.",
+   "Per-field authorization, query depth limits, allowlisting."
+  ],
+  [
+   "Logistics",
+   "Legacy TLS configuration on a partner-facing gateway.",
+   "Cipher modernization, certificate rotation, monitoring."
+  ],
+  [
+   "Identity",
+   "OTP verification lacked per-identity throttling.",
+   "Per-account limits, lockouts, anomaly alerts, retest."
+  ]
+ ]
+}
