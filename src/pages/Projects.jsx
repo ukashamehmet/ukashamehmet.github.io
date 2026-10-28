@@ -51,14 +51,16 @@ function CaseItem({ c, open, onToggle }) {
                     <div className="prose-om prose-sm-om" dangerouslySetInnerHTML={{ __html: s.html }} />
                     {i === c.sections.length - 1 && (
                       <>
-                        <div className="mt-6 grid grid-cols-3 gap-3">
-                          {c.outcomes.map((o) => (
-                            <div key={o.label} className="rounded-lg border border-line bg-obsidian p-4">
-                              <p className="font-mono text-xl sm:text-2xl font-bold text-neon">{o.value}</p>
-                              <p className="mt-1 text-xs text-muted">{o.label}</p>
-                            </div>
-                          ))}
-                        </div>
+                        {c.outcomes?.length > 0 && (
+                          <div className="mt-6 grid grid-cols-3 gap-3">
+                            {c.outcomes.map((o) => (
+                              <div key={o.label} className="rounded-lg border border-line bg-obsidian p-4">
+                                <p className="font-mono text-xl sm:text-2xl font-bold text-neon">{o.value}</p>
+                                <p className="mt-1 text-xs text-muted">{o.label}</p>
+                              </div>
+                            ))}
+                          </div>
+                        )}
                         <div className="mt-5 flex gap-3 rounded-lg border border-neon/30 bg-neon/5 p-4 text-sm">
                           <Icon.shield size={18} className="shrink-0 text-neon mt-0.5" />
                           <p className="prose-om !text-sm !leading-relaxed text-fg/90" dangerouslySetInnerHTML={{ __html: c.callout }} />

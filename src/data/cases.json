@@ -773,22 +773,8 @@
      "html": "<ul><li>Allow only explicitly approved schemes and destinations for content rendered inside the app.</li><li>Open unrelated external destinations in the system browser with clear origin context.</li><li>Minimize externally reachable navigation entry points and validate routing decisions at the receiving boundary.</li><li>Add regression tests covering untrusted destinations and scheme/host edge cases.</li></ul><p>The supplied materials do not confirm whether these changes were implemented or independently retested.</p>"
     },
     {
-     "title": "Disclosure & status",
-     "html": "<p>Submitted to the Moovit Managed Bug Bounty Program on 28 August 2026. The report states that it was accepted as a valid issue and was later marked as a duplicate during triage. Its recorded status is unresolved. The researcher confirms that the program authorized public disclosure. No remediation or fix verification is claimed here.</p><p><strong>Researcher:</strong> Okasha Mehmood (<code>ukashameh0007</code>).</p>"
-    }
-   ],
-   "outcomes": [
-    {
-     "value": "1.19.1",
-     "label": "app version assessed"
-    },
-    {
-     "value": "Duplicate",
-     "label": "program triage"
-    },
-    {
-     "value": "Unresolved",
-     "label": "status in supplied report"
+     "title": "Disclosure",
+     "html": "<p>Submitted to the Moovit Managed Bug Bounty Program on 28 August 2026. The researcher confirms that the program authorized public disclosure. No remediation or fix verification is claimed here.</p><p><strong>Researcher:</strong> Okasha Mehmood (<code>ukashameh0007</code>).</p>"
     }
    ],
    "callout": "<strong>Security lesson:</strong> an embedded browser inherits trust from its surrounding app. Keep external navigation visibly external, and make destination policy explicit.",
