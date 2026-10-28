@@ -1,12 +1,12 @@
-# Okasha Mehmood — Security Portfolio
+# Okasha Mehmood — Cyber Portfolio (CSUME-inspired)
 
-A static, dependency-free editorial portfolio for a penetration tester and reverse engineer. Built for GitHub Pages, with a sanitized case-study collection, long-form field notes, a downloadable CV, and a local-only content studio.
+A one-page cyber security portfolio inspired by the CSUME template: dark navy surfaces, purple accents, an arched portrait hero, services, selected work, and a direct contact form. The detailed case-study and blog pages are included behind the one-page home.
 
-**Live site:** https://ukashamehmet.github.io/
+**Target URL:** https://ukashamehmet.github.io/
 
 **Live sections**
 
-- `/` — positioning, selected work, approach, capabilities, experience, writing, contact
+- `/` — one-page hero, about, services, selected work, confidentiality, contact
 - `/projects/` — nine detailed, sanitized case studies
 - `/blog/` — four field notes plus full article pages
 - `/resume.html` — print-ready CV (PDF in `assets/Okasha-Mehmood-CV.pdf`)
@@ -26,32 +26,17 @@ Open `http://localhost:8000/`. No build step, no npm install, no server-side run
 
 ---
 
-## Publish on GitHub Pages
+## Publish with GitHub Pages
 
-### Important for this account
+This site is the root GitHub Pages site for `ukashamehmet/ukashamehmet.github.io`.
 
-The repository `ukashamehmet/ukashamehmet` is GitHub's special **profile README** repository. It can host a Pages site, but the URL would be `https://ukashamehmet.github.io/ukashamehmet/` and its README is displayed on your GitHub profile.
+1. Go to **Settings → Pages → Build and deployment**.
+2. Choose **Deploy from a branch**, branch **`main`**, folder **`/ (root)`**.
+3. GitHub Pages serves it at `https://ukashamehmet.github.io/`.
 
-For a clean portfolio URL, create a separate public repository named exactly **`ukashamehmet.github.io`** and upload the contents of this folder there. That gives you `https://ukashamehmet.github.io/`.
+The canonical URLs, social image URLs, and `sitemap.xml` are set for the site root. If you choose a custom domain, update those absolute URLs before publishing.
 
-### Option A — user site
-
-1. Create a repository named exactly `ukashamehmet.github.io`.
-2. Add the site files at the repository root (see the tree below).
-3. Commit and push to `main`.
-4. GitHub Pages serves `https://ukashamehmet.github.io/`.
-
-### Option B — project site
-
-1. Create a repository, for example `portfolio`.
-2. Upload the site files to the repository root.
-3. Go to **Settings → Pages → Build and deployment**.
-4. Choose **Deploy from a branch**, branch `main`, folder `/ (root)`.
-5. The site is served at `https://<your-username>.github.io/portfolio/`.
-
-All internal links are relative, so they work in both layouts. `.nojekyll` is included so GitHub Pages serves the files without Jekyll processing.
-
-> **Important:** use `git add .` with the included `.gitignore`, or upload only the files listed below. Legacy/private working material has been moved outside this folder. Do not copy it back in before publishing.
+All internal links are relative. `.nojekyll` is included so GitHub Pages serves the files without Jekyll processing.
 
 ---
 
@@ -64,12 +49,16 @@ All internal links are relative, so they work in both layouts. `.nojekyll` is in
 ├── assets/
 │   ├── style.css
 │   ├── editorial.css
+│   ├── theme.css
+│   ├── csume.css
+│   ├── inner.css
 │   ├── script.js
+│   ├── portrait-original.jpg
+│   ├── portrait-cyber.jpg
 │   ├── work-saas.jpg
 │   ├── work-network.jpg
 │   ├── work-mobile.jpg
 │   ├── work-research.jpg
-│   ├── about-desk.jpg
 │   ├── blog-arch.jpg
 │   ├── favicon.svg
 │   ├── favicon.png
@@ -138,7 +127,7 @@ The current PDF is a one-page A4 CV.
 
 ### Social preview and metadata
 
-`assets/og-card.png` is a 1200×630 social preview. Replace it with your own image if you change the hero. Canonical URLs, `og:url`, `og:image`, and `twitter:image` are now set to `https://ukashamehmet.github.io/`, and `sitemap.xml` lists the public pages.
+`assets/og-card.png` is a 1200×630 social preview. Replace it with your own image if you change the hero. Canonical URLs, `og:url`, `og:image`, and `twitter:image` are set to `https://ukashamehmet.github.io/`, and `sitemap.xml` lists the public pages.
 
 If you move to a custom domain, update these absolute URLs in every page head, update `sitemap.xml` and `robots.txt`, and replace the `og:image` path.
 
