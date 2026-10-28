@@ -13,7 +13,6 @@ needs no JavaScript and every page is fully crawlable.
 | `/blog/` | `src/pages/Blog.jsx` |
 | `/blog/posts/{tenant-boundaries,waf-origin,android-vpn,findings-engineers-fix}.html` | `src/pages/Post.jsx`, `src/data/posts.json` |
 | `/resume.html` (noindex, printable CV) | `src/pages/Resume.jsx` |
-| `/admin/` (noindex, local-only content studio) | `src/pages/Studio.jsx` |
 | `/404.html` | `src/pages/NotFound.jsx` |
 
 ## Editing content
@@ -22,6 +21,7 @@ needs no JavaScript and every page is fully crawlable.
 - Case studies and articles: `src/data/cases.json`, `src/data/posts.json`
   (generated once from the original site by `scripts/extract.py`; edit the JSON directly now).
 - New article: add an entry to `posts.json` **and** `NOTES` in `site.js` — the route is created automatically.
+- The content studio component is not routed or included in the public GitHub Pages build.
 
 ## Commands
 

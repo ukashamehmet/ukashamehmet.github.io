@@ -11,7 +11,6 @@ const loaders = {
   blog: () => import('./pages/Blog.jsx'),
   post: () => import('./pages/Post.jsx'),
   resume: () => import('./pages/Resume.jsx'),
-  studio: () => import('./pages/Studio.jsx'),
   notfound: () => import('./pages/NotFound.jsx'),
 };
 const pages = Object.fromEntries(Object.entries(loaders).map(([k, load]) => [k, lazy(load)]));

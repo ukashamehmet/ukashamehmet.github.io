@@ -1,7 +1,6 @@
 # Search engines may index the public portfolio.
 User-agent: *
 Allow: /
-Disallow: /admin/
 Disallow: /resume.html
 
 Sitemap: https://ukashamehmet.github.io/sitemap.xml
