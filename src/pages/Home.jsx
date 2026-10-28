@@ -119,7 +119,7 @@ function Work() {
           ))}
         </ul>
         <div className="mt-8 flex justify-center">
-          <Link to="/projects/" className={btn.small}>All nine case studies →</Link>
+          <Link to="/projects/" className={btn.small}>All ten case studies →</Link>
         </div>
       </div>
     </section>

@@ -115,19 +115,19 @@ export default function Projects() {
   return (
     <Layout section="projects">
       <PageHero crumb="Case studies"
-        title={<>Proof, with the names <span className="text-neon">removed.</span></>}
-        lead="Nine sanitized case studies from confidential engagements. Each one covers the context, how the issue was found, the smallest proof, the repair, and the retest. Client names, domains, IPs, payloads, and data are intentionally absent."
-        meta={['9 case studies', 'Sanitized', 'Islamabad / remote']} />
+        title={<>Security findings, <span className="text-neon">responsibly shared.</span></>}
+        lead="Ten case studies: nine anonymized engagement write-ups and one named mobile finding whose public disclosure was authorized. The named report’s duplicate triage and unresolved status are stated as supplied; exploit steps are omitted."
+        meta={['10 case studies', '9 anonymized · 1 named', 'Islamabad / remote']} />
 
       <section className="mx-auto max-w-6xl px-4 sm:px-6 py-14">
         <div className="grid md:grid-cols-2 gap-4">
           <p className="flex gap-3 rounded-xl border border-line bg-panel p-5 text-sm text-muted">
             <Icon.lock size={18} className="shrink-0 text-amber mt-0.5" />
-            <span><strong className="text-fg">Confidentiality note.</strong> These write-ups are generalized for public reading. They exclude organization and product names, hostnames, IPs, CIDRs, ASNs, exact dates, client data, credentials, session values, malware infrastructure, and copy-paste exploit payloads. Redacted reports and references are available under NDA.</span>
+            <span><strong className="text-fg">Confidentiality note.</strong> Engagement write-ups are generalized for public reading, except for the named finding explicitly authorized for disclosure. Sensitive identifiers, client data, credentials, session values, malware infrastructure, and copy-paste exploit payloads are omitted. Redacted reports and references are available under NDA.</span>
           </p>
           <p className="flex gap-3 rounded-xl border border-line bg-panel p-5 text-sm text-muted">
             <Icon.doc size={18} className="shrink-0 text-cyan mt-0.5" />
-            <span><strong className="text-fg">How to read this page.</strong> Each case is folded into a summary. Open a case to see the discovery logic, a sanitized evidence pattern, the remediation, and how the fix was verified. Every case is written from engagement records, not from memory.</span>
+            <span><strong className="text-fg">How to read this page.</strong> Each case is folded into a summary. Open one for the available context, impact, and remediation or disclosure status. Details and verification claims are limited to what the engagement records support.</span>
           </p>
         </div>
 

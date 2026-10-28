@@ -15,7 +15,7 @@ const CMDS = {
   help: () => `<span class="text-fg">available commands</span>\n  ${HELP.map(([c, d]) => `<span class="text-neon">${pad(c, 11)}</span>${esc(d)}`).join('\n  ')}`,
   whoami: () => `<span class="text-fg">${esc(SITE.name)}</span>\n${esc(SITE.role)}\n${esc(SITE.location)}\n3+ yrs offensive security · 50+ engagements`,
   cases: () => HOME_CASES.map((c) => `<span class="text-cyan">${c.no}</span> ${pad(c.sev, 9)}<span class="text-fg">${esc(c.title)}</span>`).join('\n')
-    + '\n<a class="text-neon underline" href="/projects/">→ all 9 case studies</a>',
+    + '\n<a class="text-neon underline" href="/projects/">→ all 10 case studies</a>',
   certs: () => CREDENTIALS.map((c) => `<span class="text-neon">[✓]</span> ${esc(c.name)} <span class="text-dim">— ${esc(c.issuer)}</span>`).join('\n'),
   experience: () => EXPERIENCE.map((x) => `<span class="text-amber">${esc(x.date)}</span>\n  ${esc(x.role)} · ${esc(x.org)}`).join('\n'),
   skills: () => CAPABILITIES.map((c) => `<span class="text-amber">${esc(c.title)}:</span> ${esc(c.items.slice(0, 5).join(', '))}`).join('\n'),
